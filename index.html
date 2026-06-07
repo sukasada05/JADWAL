@@ -1,0 +1,898 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+    <title>JADWAL PIKET KORAMIL SUKASADA</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/id.js"></script>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+            background: linear-gradient(135deg, #0a3a2a 0%, #0a2a1a 100%);
+            min-height: 100vh;
+            padding: 16px;
+        }
+        .app-container { max-width: 550px; margin: 0 auto; }
+
+        /* HEADER */
+        .header {
+            background: linear-gradient(135deg, #1a472a, #0d2a1a);
+            border-radius: 20px;
+            padding: 14px 18px;
+            margin-bottom: 16px;
+            text-align: center;
+            border: 1px solid rgba(255,215,0,0.3);
+        }
+        .header h1 { color: #FFD700; font-size: 17px; margin-bottom: 4px; }
+        .header p { color: #aaffaa; font-size: 9px; }
+        .header-sub {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 8px;
+            padding-top: 6px;
+            border-top: 1px solid rgba(255,255,255,0.1);
+        }
+        .tanggal-hari { color: #ccc; font-size: 10px; }
+        .exit-btn { background: #ff4444; border: none; color: white; padding: 4px 10px; border-radius: 20px; font-size: 10px; cursor: pointer; }
+        .admin-badge { background: #ff8c00; color: white; font-size: 8px; padding: 2px 6px; border-radius: 20px; margin-left: 6px; }
+        .status-online {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #4caf50;
+            margin-right: 6px;
+            animation: pulse 1.5s infinite;
+        }
+        @keyframes pulse { 0% { opacity: 0.5; } 50% { opacity: 1; } 100% { opacity: 0.5; } }
+
+        /* TAB BUTTONS */
+        .tab-buttons { display: flex; gap: 8px; margin-bottom: 16px; }
+        .tab-btn { flex: 1; padding: 10px; border: none; border-radius: 14px; font-size: 12px; font-weight: bold; cursor: pointer; background: rgba(0,0,0,0.4); color: #ccc; transition: all 0.3s; }
+        .tab-btn.active { background: #FFD700; color: #0a2a1a; }
+        .tab-btn i { margin-right: 5px; }
+
+        /* FORM STYLE */
+        .form-card {
+            background: rgba(0, 30, 0, 0.7);
+            backdrop-filter: blur(5px);
+            border-radius: 20px;
+            padding: 16px;
+            margin-bottom: 16px;
+            border: 1px solid rgba(77, 255, 77, 0.3);
+        }
+        .jadwal-item {
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid rgba(77,255,77,0.15);
+        }
+        .jadwal-item:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
+        .jadwal-title { color: #FFD700; font-size: 13px; font-weight: bold; margin-bottom: 8px; }
+        .select-row { display: flex; gap: 12px; margin-top: 5px; }
+        select {
+            flex: 1;
+            padding: 12px;
+            border-radius: 12px;
+            background: rgba(0, 40, 0, 0.9);
+            border: 1px solid #4dff4d;
+            color: #e6ffe6;
+            font-size: 12px;
+            cursor: pointer;
+        }
+        select option { background: #0a2a1a; color: #e6ffe6; }
+        .hanpangan-box {
+            background: rgba(0,0,0,0.3);
+            border-radius: 12px;
+            padding: 12px;
+            margin: 16px 0;
+            text-align: center;
+        }
+        .hanpangan-box label { color: #ffcc00; font-size: 11px; }
+        .hanpangan-box .value { color: #4dff4d; font-weight: bold; font-size: 13px; margin-top: 4px; }
+        .action-buttons { display: flex; gap: 12px; margin-top: 16px; }
+        .btn-primary { flex: 1; background: #2e7d32; border: none; padding: 12px; border-radius: 14px; color: white; font-weight: bold; cursor: pointer; font-size: 13px; }
+        .btn-wa { flex: 1; background: transparent; border: 2px solid #25D366; padding: 12px; border-radius: 14px; color: #25D366; font-weight: bold; cursor: pointer; font-size: 13px; }
+        .status-save { text-align: center; font-size: 10px; padding: 6px; margin-top: 10px; border-radius: 10px; }
+        .status-saved { background: rgba(46,125,50,0.3); color: #8bc34a; }
+
+        /* ADMIN PANEL */
+        .card {
+            background: rgba(0, 30, 0, 0.75);
+            backdrop-filter: blur(5px);
+            border-radius: 20px;
+            padding: 16px;
+            border: 1px solid rgba(77, 255, 77, 0.3);
+            margin-bottom: 16px;
+        }
+        .admin-panel {
+            background: rgba(0,0,0,0.5);
+            border-radius: 16px;
+            padding: 15px;
+            margin-bottom: 16px;
+            border: 2px solid #ff8c00;
+        }
+        .admin-title { color: #ff8c00; font-size: 13px; font-weight: bold; margin-bottom: 12px; }
+        .admin-pin-section { text-align: center; padding: 15px; }
+        .admin-pin-input {
+            width: 180px;
+            padding: 12px;
+            border-radius: 16px;
+            background: rgba(0, 40, 0, 0.9);
+            border: 2px solid #ff8c00;
+            color: #e6ffe6;
+            font-size: 18px;
+            text-align: center;
+            letter-spacing: 5px;
+            font-weight: bold;
+        }
+        .calendar-full { margin: 12px 0; }
+        .selected-dates {
+            background: rgba(0,0,0,0.3);
+            border-radius: 12px;
+            padding: 8px;
+            margin-bottom: 12px;
+            font-size: 11px;
+            color: #FFD700;
+        }
+        .form-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 16px; }
+        .form-item { background: rgba(0,0,0,0.3); border-radius: 14px; padding: 10px; }
+        .form-item .label { color: #FFD700; font-size: 10px; margin-bottom: 6px; }
+        .btn-admin-submit { width: 100%; background: #ff8c00; border: none; padding: 12px; border-radius: 14px; color: white; font-weight: bold; cursor: pointer; }
+        .preview-table, .history-table, .semua-table { width: 100%; border-collapse: collapse; font-size: 10px; }
+        .preview-table th, .history-table th, .semua-table th { text-align: left; padding: 8px 4px; color: #FFD700; border-bottom: 1px solid #2a4a2a; }
+        .preview-table td, .history-table td, .semua-table td { padding: 8px 4px; border-bottom: 1px solid #2a4a2a; color: #ccc; }
+        .btn-preview { width: 100%; background: #2e7d32; border: none; padding: 10px; border-radius: 12px; color: white; font-weight: bold; cursor: pointer; margin-bottom: 10px; }
+
+        /* RUNNING TEXT */
+        .running-text {
+            background: rgba(0,0,0,0.6);
+            border-radius: 40px;
+            padding: 8px 16px;
+            margin-bottom: 16px;
+            border: 1px solid #FFD700;
+            overflow: hidden;
+            white-space: nowrap;
+        }
+        .running-text span {
+            display: inline-block;
+            animation: marquee 12s linear infinite;
+            color: #FFD700;
+            font-size: 11px;
+        }
+        @keyframes marquee { 0% { transform: translateX(100%); } 100% { transform: translateX(-100%); } }
+
+        /* CHAT */
+        .chat-fab {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: #25D366;
+            border: none;
+            color: white;
+            font-size: 20px;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+            z-index: 100;
+        }
+        .chat-modal {
+            display: none;
+            position: fixed;
+            bottom: 80px;
+            right: 20px;
+            width: 300px;
+            height: 420px;
+            background: #0a2a1a;
+            border-radius: 20px;
+            border: 1px solid #4dff4d;
+            flex-direction: column;
+            overflow: hidden;
+            z-index: 200;
+        }
+        .chat-modal.show { display: flex; }
+        .chat-header { background: #0d2a1d; padding: 10px; display: flex; justify-content: space-between; border-bottom: 1px solid #2e8b57; }
+        .chat-header h4 { color: #4dff4d; font-size: 12px; }
+        .chat-close { background: none; border: none; color: #ccc; cursor: pointer; }
+        .chat-messages { flex: 1; overflow-y: auto; padding: 8px; display: flex; flex-direction: column; gap: 5px; }
+        .chat-message { padding: 6px 10px; border-radius: 14px; max-width: 85%; font-size: 10px; }
+        .chat-message-own { background: #2e7d32; align-self: flex-end; color: white; }
+        .chat-message-other { background: #1a3a6a; align-self: flex-start; color: white; }
+        .chat-input-area { padding: 8px; border-top: 1px solid #2a4a2a; display: flex; gap: 6px; }
+        .chat-input-area input { flex: 1; padding: 8px; border-radius: 20px; background: #1a2a1f; border: 1px solid #4dff4d; color: white; outline: none; font-size: 11px; }
+        .chat-input-area button { width: 36px; border-radius: 50%; background: #4dff4d; border: none; cursor: pointer; }
+        .online-list { display: flex; flex-wrap: wrap; gap: 4px; padding: 6px 8px; background: rgba(0,0,0,0.3); }
+        .online-badge { background: rgba(76,175,80,0.2); border-radius: 20px; padding: 2px 6px; font-size: 8px; color: #a5d6a7; }
+
+        @media (max-width: 550px) {
+            .form-grid { grid-template-columns: 1fr; gap: 8px; }
+            .select-row { flex-direction: column; gap: 8px; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="app-container">
+    <div class="header">
+        <h1><i class="fas fa-calendar-alt"></i> JADWAL PIKET KORAMIL 
+            <span class="status-online"></span>
+            <span id="adminBadge" class="admin-badge" style="display:none;">ADMIN</span>
+        </h1>
+        <p>KORAMIL 1609-05/SUKASADA • Kodim 1609/Buleleng</p>
+        <div class="header-sub">
+            <span class="tanggal-hari" id="headerTanggal"></span>
+            <button class="exit-btn" id="exitAppBtn"><i class="fas fa-sign-out-alt"></i> EXIT</button>
+        </div>
+    </div>
+
+    <div class="running-text">
+        <span id="runningTextMessage">💬 Selamat datang di Aplikasi Jadwal Piket Koramil Sukasada</span>
+    </div>
+
+    <div class="tab-buttons">
+        <button class="tab-btn active" id="tabUtamaBtn" onclick="showTab('utama')"><i class="fas fa-calendar-day"></i> PIKET</button>
+        <button class="tab-btn" id="tabAdminBtn" onclick="showTab('admin')"><i class="fas fa-user-shield"></i> ADMIN</button>
+        <button class="tab-btn" id="tabHistoryBtn" onclick="showTab('history')"><i class="fas fa-history"></i> HISTORY</button>
+        <button class="tab-btn" id="tabSemuaBtn" onclick="showTab('semua')"><i class="fas fa-list"></i> SEMUA</button>
+    </div>
+
+    <div id="utamaTab">
+        <div class="form-card">
+            <div class="jadwal-item">
+                <div class="jadwal-title"><i class="fas fa-user-shield"></i> Piket Koramil : <span id="tglHariIni"></span></div>
+                <div class="select-row">
+                    <select id="ini_piket1"><option value="">-- Pilih Nama --</option></select>
+                    <select id="ini_piket2"><option value="">-- Pilih Nama --</option></select>
+                </div>
+            </div>
+            <div class="jadwal-item">
+                <div class="jadwal-title"><i class="fas fa-user-shield"></i> Piket Koramil : <span id="tglBesok"></span></div>
+                <div class="select-row">
+                    <select id="besok_piket1"><option value="">-- Pilih Nama --</option></select>
+                    <select id="besok_piket2"><option value="">-- Pilih Nama --</option></select>
+                </div>
+            </div>
+            <div class="jadwal-item">
+                <div class="jadwal-title"><i class="fas fa-home"></i> Jaga Kediaman : <span id="tglHariIni2"></span></div>
+                <div class="select-row">
+                    <select id="ini_kediaman1"><option value="">-- Pilih Nama --</option></select>
+                    <select id="ini_kediaman2"><option value="">-- Pilih Nama --</option></select>
+                </div>
+            </div>
+            <div class="jadwal-item">
+                <div class="jadwal-title"><i class="fas fa-home"></i> Jaga Kediaman : <span id="tglBesok2"></span></div>
+                <div class="select-row">
+                    <select id="besok_kediaman1"><option value="">-- Pilih Nama --</option></select>
+                    <select id="besok_kediaman2"><option value="">-- Pilih Nama --</option></select>
+                </div>
+            </div>
+            <div class="jadwal-item">
+                <div class="jadwal-title"><i class="fas fa-building"></i> Piket Makodim : <span id="tglHariIni3"></span></div>
+                <div class="select-row">
+                    <select id="ini_makodim1"><option value="">-- Pilih Nama --</option></select>
+                    <select id="ini_makodim2"><option value="">-- Pilih Nama --</option></select>
+                </div>
+            </div>
+            <div class="jadwal-item">
+                <div class="jadwal-title"><i class="fas fa-building"></i> Piket Makodim : <span id="tglBesok3"></span></div>
+                <div class="select-row">
+                    <select id="besok_makodim1"><option value="">-- Pilih Nama --</option></select>
+                    <select id="besok_makodim2"><option value="">-- Pilih Nama --</option></select>
+                </div>
+            </div>
+
+            <div class="hanpangan-box">
+                <label><i class="fas fa-utensils"></i> JADWAL HANPANGAN HARI INI</label>
+                <div class="value" id="hanpanganValue">-</div>
+            </div>
+
+            <div class="action-buttons">
+                <button class="btn-primary" onclick="simpanSemuaJadwal()"><i class="fas fa-save"></i> SIMPAN</button>
+                <button class="btn-wa" onclick="kirimWA()"><i class="fab fa-whatsapp"></i> KIRIM KE WHATSAPP</button>
+            </div>
+            <div id="statusSave" class="status-save status-saved"><i class="fas fa-check-circle"></i> Tersimpan</div>
+        </div>
+    </div>
+
+    <div id="adminTab" class="card" style="display: none;">
+        <div class="admin-panel">
+            <div class="admin-title"><i class="fas fa-key"></i> AKSES ADMIN</div>
+            <div id="pinSection" class="admin-pin-section">
+                <input type="password" id="adminPin" class="admin-pin-input" placeholder="PIN" maxlength="4" oninput="checkAdminPin()">
+                <div style="margin-top:8px; font-size:10px; color:#aaa;">Masukkan PIN 4321</div>
+            </div>
+            <div id="calendarSection" style="display: none;">
+                <div class="admin-title"><i class="fas fa-calendar-alt"></i> KLIK TANGGAL</div>
+                <div id="calendarFull" class="calendar-full"></div>
+            </div>
+            <div id="jadwalInputForm" style="display:none;">
+                <div class="admin-title">INPUT JADWAL</div>
+                <div id="selectedDatesList" class="selected-dates">Belum ada tanggal</div>
+                <div class="form-grid">
+                    <div class="form-item">
+                        <div class="label">PIKET KORAMIL 1</div>
+                        <select id="admin_piket1"><option value="">-- Pilih --</option></select>
+                        <div class="label" style="margin-top:8px;">PIKET KORAMIL 2</div>
+                        <select id="admin_piket2"><option value="">-- Pilih --</option></select>
+                    </div>
+                    <div class="form-item">
+                        <div class="label">JAGA KEDIAMAN 1</div>
+                        <select id="admin_kediaman1"><option value="">-- Pilih --</option></select>
+                        <div class="label" style="margin-top:8px;">JAGA KEDIAMAN 2</div>
+                        <select id="admin_kediaman2"><option value="">-- Pilih --</option></select>
+                    </div>
+                    <div class="form-item">
+                        <div class="label">PIKET MAKODIM 1</div>
+                        <select id="admin_makodim1"><option value="">-- Pilih --</option></select>
+                        <div class="label" style="margin-top:8px;">PIKET MAKODIM 2</div>
+                        <select id="admin_makodim2"><option value="">-- Pilih --</option></select>
+                    </div>
+                </div>
+                <button class="btn-admin-submit" onclick="simpanKeTanggalTerpilih()">SIMPAN KE TANGGAL TERPILIH</button>
+            </div>
+        </div>
+        <div>
+            <button class="btn-preview" onclick="previewJadwal()">PREVIEW</button>
+            <table class="preview-table"><thead><tr><th>Tanggal</th><th>Piket</th><th>Kediaman</th><th>Makodim</th></tr></thead><tbody id="previewBody"><tr><td colspan="4">Pilih tanggal</td></tr></tbody>
+            </table>
+        </div>
+    </div>
+
+    <div id="historyTab" class="card" style="display: none;">
+        <input type="month" id="bulanHistory" style="width:100%; padding:10px; margin-bottom:10px; border-radius:12px; background:rgba(0,40,0,0.9); border:1px solid #4dff4d; color:#e6ffe6;">
+        <table class="history-table" style="margin-top:12px;"><thead><tr><th>Tanggal</th><th>Piket</th><th>Kediaman</th><th>Makodim</th></tr></thead><tbody id="historyBody"></tbody></table>
+    </div>
+
+    <div id="semuaTab" class="card" style="display: none;">
+        <input type="text" id="searchTanggal" placeholder="Cari tanggal" style="width:100%; padding:10px; margin-bottom:10px; border-radius:12px; background:rgba(0,40,0,0.9); border:1px solid #4dff4d; color:#e6ffe6;">
+        <table class="semua-table" style="margin-top:12px;"><thead><tr><th>Tanggal</th><th>Piket</th><th>Kediaman</th><th>Makodim</th><th>Status</th><tr></thead><tbody id="semuaBody"></tbody></table>
+    </div>
+</div>
+
+<button class="chat-fab" id="chatFabBtn"><i class="fas fa-comment-dots"></i></button>
+<div id="chatModal" class="chat-modal">
+    <div class="chat-header"><h4>LIVE CHAT</h4><button class="chat-close" id="chatCloseBtn"><i class="fas fa-times"></i></button></div>
+    <div class="online-list" id="onlineList"></div>
+    <div class="chat-messages" id="chatMessages"></div>
+    <div class="chat-input-area"><input type="text" id="chatInput" placeholder="Pesan..."><button id="chatSendBtn"><i class="fas fa-paper-plane"></i></button></div>
+</div>
+
+<script>
+    // ============ DATA PERSONEL (DEFAULT 16 NAMA) ============
+    let DAFTAR_PERSONEL = [
+        "Peltu I Nyoman Wilmana", "Peltu Made Edi Sutrawan", "Peltu Ketut Serangan",
+        "Pelda I Komang Karia", "Pelda I Made Suradnya", "Serma I Kadek Teges Suardana",
+        "Serma Mujiburrahman", "Serka Wahyu Hidayat", "Serka I Made Widiasa",
+        "Serka Satriyo", "Serka I Nyoman Arta", "Serka Nyoman Join Amitaba",
+        "Sertu Nyoman Warsa", "Sertu I Made Ariasa", "Serda I Putu Suwidana Yasa", "Koptu Jasman"
+    ];
+
+    // ============ DATA HANPANGAN DARI GITHUB ============
+    let daftarHanpangan = [];
+    let lastRefresh = Date.now();
+    const HANPANGAN_URL = "https://raw.githubusercontent.com/sukasada05/dukops4/main/data/hanpangan.txt";
+    const PIKET_URL = "https://raw.githubusercontent.com/sukasada05/dukops4/main/data/piket.txt";
+
+    // Fungsi mengambil data dari GitHub (auto tanpa popup)
+    async function fetchDataFromGitHub() {
+        try {
+            // Ambil data hanpangan
+            const hanpanganRes = await fetch(HANPANGAN_URL + '?t=' + Date.now());
+            if (hanpanganRes.ok) {
+                const text = await hanpanganRes.text();
+                const lines = text.trim().split('\n').filter(l => l.trim());
+                if (lines.length > 0) {
+                    daftarHanpangan = lines;
+                    console.log("✅ Hanpangan updated from GitHub:", daftarHanpangan.length);
+                }
+            }
+            
+            // Ambil data personel piket
+            const piketRes = await fetch(PIKET_URL + '?t=' + Date.now());
+            if (piketRes.ok) {
+                const text = await piketRes.text();
+                const lines = text.trim().split('\n').filter(l => l.trim());
+                if (lines.length > 0) {
+                    DAFTAR_PERSONEL = lines;
+                    console.log("✅ Personel updated from GitHub:", DAFTAR_PERSONEL.length);
+                    // Refresh semua dropdown dengan data baru
+                    populateAll();
+                }
+            }
+            
+            // Jika hanpangan masih kosong, gunakan personel sebagai fallback
+            if (daftarHanpangan.length === 0) {
+                daftarHanpangan = [...DAFTAR_PERSONEL];
+            }
+            
+            lastRefresh = Date.now();
+            return true;
+        } catch(e) {
+            console.error("Gagal fetch data:", e);
+            if (daftarHanpangan.length === 0) daftarHanpangan = [...DAFTAR_PERSONEL];
+            return false;
+        }
+    }
+
+    // ============ SISTEM ROTASI HANPANGAN (BERDASARKAN GILIRAN) ============
+    function getRotasiCounter() {
+        let counter = localStorage.getItem('hanpangan_rotasi_counter');
+        let lastDate = localStorage.getItem('hanpangan_last_date');
+        const today = new Date().toISOString().split('T')[0];
+        
+        if (counter === null || lastDate !== today) {
+            let newCounter = (parseInt(counter || '0') + 1) % daftarHanpangan.length;
+            localStorage.setItem('hanpangan_rotasi_counter', newCounter);
+            localStorage.setItem('hanpangan_last_date', today);
+            return newCounter;
+        }
+        return parseInt(counter);
+    }
+
+    function getCurrentHanpangan() {
+        if (daftarHanpangan.length === 0) return "Memuat...";
+        const counter = getRotasiCounter();
+        return daftarHanpangan[counter % daftarHanpangan.length];
+    }
+
+    // Cek pergantian hari (auto update tanpa popup)
+    let lastCheckDate = new Date().toISOString().split('T')[0];
+    function checkDayChange() {
+        const today = new Date().toISOString().split('T')[0];
+        if (lastCheckDate !== today) {
+            lastCheckDate = today;
+            // Hari berganti, update rotasi
+            const counter = (parseInt(localStorage.getItem('hanpangan_rotasi_counter') || '0') + 1) % daftarHanpangan.length;
+            localStorage.setItem('hanpangan_rotasi_counter', counter);
+            localStorage.setItem('hanpangan_last_date', today);
+            
+            // Update tampilan tanpa reload
+            const newHanpangan = daftarHanpangan[counter];
+            document.getElementById('hanpanganValue').innerHTML = newHanpangan;
+            
+            // Update running text (tanpa popup)
+            const runningText = document.getElementById('runningTextMessage');
+            const waktu = new Date().toLocaleTimeString('id-ID', {hour:'2-digit',minute:'2-digit'});
+            runningText.textContent = `🔄 [${waktu}] Jadwal Hanpangan berganti menjadi: ${newHanpangan}`;
+            setTimeout(() => {
+                if (runningText.textContent.includes('Hanpangan berganti')) {
+                    runningText.textContent = `💬 Selamat datang di Aplikasi Jadwal Piket Koramil Sukasada`;
+                }
+            }, 8000);
+            
+            // Refresh tanggal di header
+            document.getElementById('headerTanggal').innerHTML = formatTanggal(new Date());
+        }
+    }
+
+    // ============ AUTO REFRESH DATA DARI GITHUB (SETIAP 5 MENIT) ============
+    let autoRefreshInterval = null;
+    function startAutoRefresh() {
+        if (autoRefreshInterval) clearInterval(autoRefreshInterval);
+        autoRefreshInterval = setInterval(async () => {
+            await fetchDataFromGitHub();
+            loadUtama(); // Refresh tampilan dengan data baru
+            // Update running text (tanpa popup)
+            const waktu = new Date().toLocaleTimeString('id-ID', {hour:'2-digit',minute:'2-digit'});
+            const runningText = document.getElementById('runningTextMessage');
+            runningText.textContent = `🔄 [${waktu}] Data jadwal diperbarui dari server`;
+            setTimeout(() => {
+                if (runningText.textContent.includes('diperbarui dari server')) {
+                    runningText.textContent = `💬 Selamat datang di Aplikasi Jadwal Piket Koramil Sukasada`;
+                }
+            }, 5000);
+        }, 300000); // 5 menit
+    }
+
+    // ============ AUDIO ============
+    let audioContext = null;
+    function playBeep(freq, dur, vol=0.2) {
+        try {
+            if (!audioContext) audioContext = new (window.AudioContext||window.webkitAudioContext)();
+            const osc = audioContext.createOscillator();
+            const gain = audioContext.createGain();
+            osc.connect(gain);
+            gain.connect(audioContext.destination);
+            osc.frequency.value = freq;
+            gain.gain.value = vol;
+            osc.start();
+            gain.gain.exponentialRampToValueAtTime(0.00001, audioContext.currentTime + dur);
+            osc.stop(audioContext.currentTime + dur);
+        } catch(e) {}
+    }
+    function playClick() { playBeep(800, 0.08, 0.2); }
+    function playSend() { playBeep(1200, 0.12, 0.3); setTimeout(()=>playBeep(1000,0.1,0.2),100); }
+    function playOpen() { playBeep(600,0.15,0.25); setTimeout(()=>playBeep(800,0.12,0.2),120); setTimeout(()=>playBeep(1000,0.1,0.15),250); }
+
+    // ============ STORAGE ============
+    let jadwalStorage = {};
+    let isAdminMode = false;
+    let selectedDates = [];
+
+    function loadStorage() {
+        const saved = localStorage.getItem('jadwal_piket_koramil');
+        if (saved) try { jadwalStorage = JSON.parse(saved); } catch(e) {}
+    }
+    function saveStorage() { localStorage.setItem('jadwal_piket_koramil', JSON.stringify(jadwalStorage)); }
+    function getJadwal(tgl) { return jadwalStorage[tgl] || null; }
+    function setJadwal(tgl, data) { jadwalStorage[tgl] = data; saveStorage(); }
+
+    // ============ TANGGAL ============
+    function formatTanggal(date) {
+        const days = ["Minggu","Senin","Selasa","Rabu","Kamis","Jumat","Sabtu"];
+        const months = ["Januari","Februari","Maret","April","Mei","Juni","Juli","Agustus","September","Oktober","November","Desember"];
+        return `${days[date.getDay()]}, ${date.getDate()} ${months[date.getMonth()]} ${date.getFullYear()}`;
+    }
+    function getToday() { return new Date().toISOString().split('T')[0]; }
+    function getTomorrow() { const d = new Date(); d.setDate(d.getDate()+1); return d.toISOString().split('T')[0]; }
+
+    // ============ POPULATE SELECT ============
+    function populateSelect(selectId, val='') {
+        const sel = document.getElementById(selectId);
+        if(!sel) return;
+        sel.innerHTML = '<option value="">-- Pilih Nama --</option>';
+        DAFTAR_PERSONEL.forEach(p => {
+            const opt = document.createElement('option');
+            opt.value = p;
+            opt.textContent = p;
+            if(p === val) opt.selected = true;
+            sel.appendChild(opt);
+        });
+    }
+
+    function populateAll() {
+        const ids = ['ini_piket1','ini_piket2','besok_piket1','besok_piket2',
+                     'ini_kediaman1','ini_kediaman2','besok_kediaman1','besok_kediaman2',
+                     'ini_makodim1','ini_makodim2','besok_makodim1','besok_makodim2',
+                     'admin_piket1','admin_piket2','admin_kediaman1','admin_kediaman2','admin_makodim1','admin_makodim2'];
+        ids.forEach(id => populateSelect(id));
+    }
+
+    // ============ LOAD TAMPILAN UTAMA ============
+    function loadUtama() {
+        const todayStr = getToday();
+        const tomorrowStr = getTomorrow();
+        const todayDate = new Date();
+        const tomorrowDate = new Date(); tomorrowDate.setDate(tomorrowDate.getDate()+1);
+        
+        const tglHariIni = formatTanggal(todayDate);
+        const tglBesok = formatTanggal(tomorrowDate);
+        
+        document.getElementById('tglHariIni').innerHTML = tglHariIni;
+        document.getElementById('tglBesok').innerHTML = tglBesok;
+        document.getElementById('tglHariIni2').innerHTML = tglHariIni;
+        document.getElementById('tglBesok2').innerHTML = tglBesok;
+        document.getElementById('tglHariIni3').innerHTML = tglHariIni;
+        document.getElementById('tglBesok3').innerHTML = tglBesok;
+        
+        document.getElementById('hanpanganValue').innerHTML = getCurrentHanpangan();
+        
+        const dataIni = getJadwal(todayStr);
+        if(dataIni) {
+            document.getElementById('ini_piket1').value = dataIni.piket1 || '';
+            document.getElementById('ini_piket2').value = dataIni.piket2 || '';
+            document.getElementById('ini_kediaman1').value = dataIni.kediaman1 || '';
+            document.getElementById('ini_kediaman2').value = dataIni.kediaman2 || '';
+            document.getElementById('ini_makodim1').value = dataIni.makodim1 || '';
+            document.getElementById('ini_makodim2').value = dataIni.makodim2 || '';
+        }
+        
+        const dataBesok = getJadwal(tomorrowStr);
+        if(dataBesok) {
+            document.getElementById('besok_piket1').value = dataBesok.piket1 || '';
+            document.getElementById('besok_piket2').value = dataBesok.piket2 || '';
+            document.getElementById('besok_kediaman1').value = dataBesok.kediaman1 || '';
+            document.getElementById('besok_kediaman2').value = dataBesok.kediaman2 || '';
+            document.getElementById('besok_makodim1').value = dataBesok.makodim1 || '';
+            document.getElementById('besok_makodim2').value = dataBesok.makodim2 || '';
+        }
+    }
+
+    function simpanSemuaJadwal() {
+        const todayStr = getToday();
+        const tomorrowStr = getTomorrow();
+        
+        const dataIni = {
+            piket1: document.getElementById('ini_piket1').value,
+            piket2: document.getElementById('ini_piket2').value,
+            kediaman1: document.getElementById('ini_kediaman1').value,
+            kediaman2: document.getElementById('ini_kediaman2').value,
+            makodim1: document.getElementById('ini_makodim1').value,
+            makodim2: document.getElementById('ini_makodim2').value
+        };
+        const dataBesok = {
+            piket1: document.getElementById('besok_piket1').value,
+            piket2: document.getElementById('besok_piket2').value,
+            kediaman1: document.getElementById('besok_kediaman1').value,
+            kediaman2: document.getElementById('besok_kediaman2').value,
+            makodim1: document.getElementById('besok_makodim1').value,
+            makodim2: document.getElementById('besok_makodim2').value
+        };
+        
+        setJadwal(todayStr, dataIni);
+        setJadwal(tomorrowStr, dataBesok);
+        
+        document.getElementById('statusSave').innerHTML = '<i class="fas fa-check-circle"></i> Tersimpan!';
+        playSend();
+        
+        // Update running text tanpa popup
+        const waktu = new Date().toLocaleTimeString('id-ID', {hour:'2-digit',minute:'2-digit'});
+        const runningText = document.getElementById('runningTextMessage');
+        runningText.textContent = `💾 [${waktu}] Jadwal ${formatTanggal(new Date())} berhasil disimpan`;
+        setTimeout(() => {
+            if (runningText.textContent.includes('berhasil disimpan')) {
+                runningText.textContent = `💬 Selamat datang di Aplikasi Jadwal Piket Koramil Sukasada`;
+            }
+        }, 4000);
+    }
+
+    function getPesanWA() {
+        const todayStr = getToday();
+        const tomorrowStr = getTomorrow();
+        const dataIni = getJadwal(todayStr) || {};
+        const dataBesok = getJadwal(tomorrowStr) || {};
+        const todayDate = new Date();
+        const tomorrowDate = new Date(); tomorrowDate.setDate(tomorrowDate.getDate()+1);
+        
+        return `=======================
+KORAMIL 1609-05/SUKASADA
+    JADWAL PIKET
+=======================
+
+📅 ${formatTanggal(todayDate)}
+👮 PIKET KORAMIL: ${dataIni.piket1 || '-'} / ${dataIni.piket2 || '-'}
+🏠 JAGA KEDIAMAN: ${dataIni.kediaman1 || '-'} / ${dataIni.kediaman2 || '-'}
+🏢 PIKET MAKODIM: ${dataIni.makodim1 || '-'} / ${dataIni.makodim2 || '-'}
+
+📅 ${formatTanggal(tomorrowDate)}
+👮 PIKET KORAMIL: ${dataBesok.piket1 || '-'} / ${dataBesok.piket2 || '-'}
+🏠 JAGA KEDIAMAN: ${dataBesok.kediaman1 || '-'} / ${dataBesok.kediaman2 || '-'}
+🏢 PIKET MAKODIM: ${dataBesok.makodim1 || '-'} / ${dataBesok.makodim2 || '-'}
+
+🍽️ HANPANGAN: ${getCurrentHanpangan()}
+
+Demikian jadwal piket.`;
+    }
+
+    function kirimWA() {
+        window.open("https://wa.me/?text=" + encodeURIComponent(getPesanWA()), "_blank");
+        playSend();
+    }
+
+    // ============ ADMIN ============
+    function checkAdminPin() {
+        const pin = document.getElementById('adminPin').value;
+        if(pin === '4321') {
+            isAdminMode = true;
+            document.getElementById('pinSection').style.display = 'none';
+            document.getElementById('calendarSection').style.display = 'block';
+            document.getElementById('adminBadge').style.display = 'inline-block';
+            playOpen();
+            initCalendar();
+        } else if(pin.length===4 && pin!=='4321') {
+            document.getElementById('adminPin').value = '';
+        }
+    }
+
+    let flatpickr = null;
+    function initCalendar() {
+        if(flatpickr) return;
+        flatpickr = flatpickr("#calendarFull", {
+            locale: "id", mode: "multiple", dateFormat: "Y-m-d", inline: true,
+            onChange: function(dates) {
+                selectedDates = dates.map(d=>d.toISOString().split('T')[0]);
+                const div = document.getElementById('selectedDatesList');
+                const form = document.getElementById('jadwalInputForm');
+                if(selectedDates.length) {
+                    div.innerHTML = `📅 ${selectedDates.length} tanggal terpilih`;
+                    form.style.display = 'block';
+                } else {
+                    div.innerHTML = 'Belum ada tanggal';
+                    form.style.display = 'none';
+                }
+                previewJadwal();
+                playClick();
+            }
+        });
+    }
+
+    function previewJadwal() {
+        const tbody = document.getElementById('previewBody');
+        if(!selectedDates.length) { tbody.innerHTML='<td colspan="4">Pilih tanggal</td>'; return; }
+        tbody.innerHTML = '';
+        for(const tgl of selectedDates) {
+            const data = getJadwal(tgl);
+            const date = new Date(tgl);
+            tbody.innerHTML += `<tr><td>${formatTanggal(date)}</td>
+                <td>${data ? `${data.piket1||'-'}/${data.piket2||'-'}` : '<span style="color:#ff8888;">-</span>'}</td>
+                <td>${data ? `${data.kediaman1||'-'}/${data.kediaman2||'-'}` : '<span style="color:#ff8888;">-</span>'}</td>
+                <td>${data ? `${data.makodim1||'-'}/${data.makodim2||'-'}` : '<span style="color:#ff8888;">-</span>'}</td></tr>`;
+        }
+    }
+
+    function simpanKeTanggalTerpilih() {
+        if(!selectedDates.length) { return; }
+        const data = {
+            piket1: document.getElementById('admin_piket1').value,
+            piket2: document.getElementById('admin_piket2').value,
+            kediaman1: document.getElementById('admin_kediaman1').value,
+            kediaman2: document.getElementById('admin_kediaman2').value,
+            makodim1: document.getElementById('admin_makodim1').value,
+            makodim2: document.getElementById('admin_makodim2').value
+        };
+        if(!data.piket1 || !data.piket2 || !data.kediaman1 || !data.kediaman2 || !data.makodim1 || !data.makodim2) {
+            return;
+        }
+        for(const tgl of selectedDates) setJadwal(tgl, data);
+        playSend();
+        loadUtama();
+        previewJadwal();
+        tampilHistory();
+        tampilSemua();
+    }
+
+    // ============ HISTORY & SEMUA (AUTO UPDATE) ============
+    function tampilHistory() {
+        const bulan = document.getElementById('bulanHistory').value;
+        if(!bulan) return;
+        const [year, month] = bulan.split('-');
+        const start = new Date(year, month-1, 1);
+        const end = new Date(year, month, 0);
+        const today = new Date(); today.setHours(0,0,0,0);
+        const dates = [];
+        for(let d=new Date(start); d<=end; d.setDate(d.getDate()+1)) if(d<today) dates.push(new Date(d));
+        dates.reverse();
+        const tbody = document.getElementById('historyBody');
+        tbody.innerHTML = '';
+        if(!dates.length) { tbody.innerHTML='<td colspan="4">Tidak ada</td>'; return; }
+        for(const date of dates) {
+            const tgl = date.toISOString().split('T')[0];
+            const data = getJadwal(tgl);
+            tbody.innerHTML += `<tr><td>${formatTanggal(date)}</td>
+                <td>${data ? `${data.piket1||'-'}/${data.piket2||'-'}` : '-'}</td>
+                <td>${data ? `${data.kediaman1||'-'}/${data.kediaman2||'-'}` : '-'}</td>
+                <td>${data ? `${data.makodim1||'-'}/${data.makodim2||'-'}` : '-'}</td></tr>`;
+        }
+    }
+
+    function tampilSemua() {
+        const tbody = document.getElementById('semuaBody');
+        const list = Object.keys(jadwalStorage).sort().reverse();
+        if(!list.length) { tbody.innerHTML='<td colspan="5">Belum ada</td>'; return; }
+        tbody.innerHTML = '';
+        const today = getToday();
+        for(const tgl of list) {
+            const data = jadwalStorage[tgl];
+            const date = new Date(tgl);
+            const status = tgl===today ? '🟢 Hari Ini' : (tgl<today ? '📜 Lewat' : '📅 Akan');
+            tbody.innerHTML += `<tr><td>${formatTanggal(date)}</td>
+                <td>${data.piket1||'-'}/${data.piket2||'-'}</td>
+                <td>${data.kediaman1||'-'}/${data.kediaman2||'-'}</td>
+                <td>${data.makodim1||'-'}/${data.makodim2||'-'}</td>
+                <td>${status}</td></tr>`;
+        }
+    }
+
+    function cariJadwal() {
+        const keyword = document.getElementById('searchTanggal').value.toLowerCase();
+        const tbody = document.getElementById('semuaBody');
+        const filtered = Object.keys(jadwalStorage).filter(t=>t.includes(keyword)).sort().reverse();
+        if(!filtered.length) { tbody.innerHTML=`<td colspan="5">Tidak ditemukan</td>`; return; }
+        tbody.innerHTML = '';
+        for(const tgl of filtered) {
+            const data = jadwalStorage[tgl];
+            const date = new Date(tgl);
+            tbody.innerHTML += `<tr><td>${formatTanggal(date)}</td>
+                <td>${data.piket1||'-'}/${data.piket2||'-'}</td>
+                <td>${data.kediaman1||'-'}/${data.kediaman2||'-'}</td>
+                <td>${data.makodim1||'-'}/${data.makodim2||'-'}</td>
+                <td></td></tr>`;
+        }
+    }
+
+    // ============ TAB NAVIGASI ============
+    function showTab(tab) {
+        document.getElementById('utamaTab').style.display = tab==='utama' ? 'block' : 'none';
+        document.getElementById('adminTab').style.display = tab==='admin' ? 'block' : 'none';
+        document.getElementById('historyTab').style.display = tab==='history' ? 'block' : 'none';
+        document.getElementById('semuaTab').style.display = tab==='semua' ? 'block' : 'none';
+        document.querySelectorAll('.tab-btn').forEach(btn=>btn.classList.remove('active'));
+        if(tab==='utama') document.getElementById('tabUtamaBtn').classList.add('active');
+        if(tab==='admin') document.getElementById('tabAdminBtn').classList.add('active');
+        if(tab==='history') document.getElementById('tabHistoryBtn').classList.add('active');
+        if(tab==='semua') document.getElementById('tabSemuaBtn').classList.add('active');
+        if(tab==='history') { const n=new Date(); document.getElementById('bulanHistory').value=`${n.getFullYear()}-${String(n.getMonth()+1).padStart(2,'0')}`; tampilHistory(); }
+        if(tab==='semua') tampilSemua();
+        playClick();
+    }
+
+    // ============ CHAT ============
+    let chatMessages = [];
+    let currentUser = "Koramil Sukasada";
+    let onlineUsers = ["Koramil Sukasada", "Desa Pegayaman", "Desa Sukasada"];
+
+    function renderChat() {
+        const container = document.getElementById('chatMessages');
+        if(!container) return;
+        if(chatMessages.length===0) { container.innerHTML='<div class="chat-message chat-message-other">💬 Mulai chat...</div>'; return; }
+        container.innerHTML = chatMessages.map(msg=>`<div class="chat-message ${msg.isOwn?'chat-message-own':'chat-message-other'}"><div class="chat-message-name">${msg.username}</div><div>${msg.message}</div></div>`).join('');
+        container.scrollTop = container.scrollHeight;
+    }
+
+    function renderOnline() {
+        const container = document.getElementById('onlineList');
+        if(container) container.innerHTML = onlineUsers.map(u=>`<span class="online-badge">🟢 ${u}</span>`).join('');
+    }
+
+    function sendChat() {
+        const input = document.getElementById('chatInput');
+        const msg = input.value.trim();
+        if(!msg) return;
+        chatMessages.push({username: currentUser, message: msg, isOwn: true});
+        renderChat();
+        input.value = '';
+        playSend();
+        const waktu = new Date().toLocaleTimeString('id-ID',{hour:'2-digit',minute:'2-digit'});
+        const runningText = document.getElementById('runningTextMessage');
+        runningText.textContent = `💬 [${waktu}] ${currentUser}: ${msg.substring(0,50)}`;
+        setTimeout(() => {
+            if (runningText.textContent.includes(currentUser)) {
+                runningText.textContent = `💬 Selamat datang di Aplikasi Jadwal Piket Koramil Sukasada`;
+            }
+        }, 5000);
+    }
+
+    // ============ EXIT ============
+    let isExiting = false;
+    window.addEventListener('beforeunload', (e) => {
+        if(!isExiting) { e.preventDefault(); e.returnValue = 'Tutup aplikasi dengan benar?'; }
+    });
+    function exitApp() {
+        if(confirm('Tutup aplikasi?')) { isExiting=true; window.close(); }
+    }
+
+    // ============ AUTO UPDATE INTERVAL (Tanpa Popup) ============
+    setInterval(() => {
+        checkDayChange();
+        // Auto refresh history dan semua tab jika sedang aktif
+        if (document.getElementById('historyTab').style.display !== 'none') tampilHistory();
+        if (document.getElementById('semuaTab').style.display !== 'none') tampilSemua();
+    }, 60000); // Cek setiap menit
+
+    // ============ INIT ============
+    document.addEventListener('DOMContentLoaded', async () => {
+        await fetchDataFromGitHub();
+        loadStorage();
+        populateAll();
+        loadUtama();
+        document.getElementById('headerTanggal').innerHTML = formatTanggal(new Date());
+        document.getElementById('exitAppBtn').onclick = exitApp;
+        
+        // Event listeners untuk input pencarian
+        document.getElementById('bulanHistory').addEventListener('change', () => tampilHistory());
+        document.getElementById('searchTanggal').addEventListener('input', () => cariJadwal());
+        
+        // Chat events
+        document.getElementById('chatFabBtn').onclick = () => { document.getElementById('chatModal').classList.toggle('show'); if(document.getElementById('chatModal').classList.contains('show')) playOpen(); renderChat(); renderOnline(); };
+        document.getElementById('chatCloseBtn').onclick = () => document.getElementById('chatModal').classList.remove('show');
+        document.getElementById('chatSendBtn').onclick = sendChat;
+        document.getElementById('chatInput').addEventListener('keypress', (e) => { if(e.key==='Enter') sendChat(); });
+        
+        renderChat();
+        renderOnline();
+        
+        // Start auto refresh data dari GitHub
+        startAutoRefresh();
+        
+        setTimeout(()=>{ playOpen(); },500);
+        setTimeout(()=>{ chatMessages.push({username:"Desa Pegayaman", message:"Jadwal sudah saya terima", isOwn:false}); renderChat(); },3000);
+    });
+</script>
+</body>
+</html>
