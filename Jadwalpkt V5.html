@@ -1,0 +1,1407 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <title>Jadwal Piket Koramil 1609-05/Sukasada</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="theme-color" content="#004d00">
+  <link rel="manifest" href="manifest.json">
+  <script src="https://unpkg.com/tone/build/Tone.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Times+New+Roman&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    /* Global Styles */
+    * {
+      box-sizing: border-box;
+      font-family: 'Times New Roman', serif;
+    }
+    
+    @keyframes gradientBG {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+    
+    body {
+      font-family: 'Times New Roman', serif;
+      margin: 0;
+      padding: 1rem;
+      background: linear-gradient(135deg, #003300, #004d00, #006600, #003300);
+      background-size: 400% 400%;
+      animation: gradientBG 15s ease infinite;
+      color: #e6ffe6;
+      min-height: 100vh;
+    }
+    
+    h2, h3 {
+      text-align: center;
+      margin-bottom: 0.5rem;
+      color: #7fff7f;
+      text-shadow: 0 0 5px rgba(127, 255, 127, 0.5);
+    }
+    
+    /* New Radar Container Styles */
+    .radar-container {
+      position: relative;
+      width: 100%;
+      height: 300px;
+      margin-bottom: 1rem;
+      background-color: rgba(0, 20, 0, 0.2);
+      border: 2px solid #0f0;
+      border-radius: 8px;
+      overflow: hidden;
+    }
+
+    #mainRadar {
+      width: 100%;
+      height: 100%;
+      display: block;
+    }
+
+    .radar-content {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      text-align: center;
+      z-index: 10;
+      pointer-events: none;
+      width: 100%;
+      padding: 20px;
+    }
+
+    .radar-title {
+      font-size: 1.5em;
+      font-weight: bold;
+      color: #7fff7f;
+      text-shadow: 0 0 10px rgba(127, 255, 127, 0.7);
+      margin-bottom: 5px;
+    }
+
+    .radar-subtitle {
+      font-size: 1em;
+      color: #7fff7f;
+      margin-bottom: 15px;
+      text-shadow: 0 0 5px rgba(127, 255, 127, 0.5);
+    }
+
+    .radar-target {
+      font-size: 1.2em;
+      font-weight: bold;
+      color: #7fff7f;
+      background-color: rgba(0, 50, 0, 0.5);
+      padding: 8px 15px;
+      border-radius: 15px;
+      border: 1px solid #7fff7f;
+      display: inline-block;
+      text-shadow: 0 0 5px rgba(127, 255, 127, 0.5);
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0% { opacity: 0.7; }
+      50% { opacity: 1; }
+      100% { opacity: 0.7; }
+    }
+
+    /* Rest of your existing styles */
+    .section-container {
+      background: rgba(0, 40, 0, 0.7);
+      border-radius: 12px;
+      padding: 1rem;
+      margin-bottom: 1rem;
+      box-shadow: 0 0 15px rgba(0, 255, 0, 0.5);
+      border: 1px solid rgba(0, 255, 127, 0.3);
+      backdrop-filter: blur(5px);
+      transition: all 0.3s ease;
+    }
+    
+    .section-container:hover {
+      box-shadow: 0 0 25px rgba(0, 255, 0, 0.8);
+      transform: translateY(-2px);
+    }
+    
+    .bold-text {
+      font-weight: bold;
+      color: #7fff7f;
+    }
+
+    /* Button Styles */
+    .btn {
+      position: relative;
+      background: linear-gradient(270deg, #7fff7f, #004d00, #7fff7f, #7fff7f);
+      background-size: 400% 400%;
+      animation: gradientMove 5s linear infinite;
+      border: 2px solid #7fff7f;
+      box-shadow: 0 0 10px #7fff7f, 0 0 20px #7fff7f inset;
+      color: #003300;
+      font-weight: bold;
+      cursor: pointer;
+      text-shadow: 0 1px 1px rgba(0,0,0,0.2);
+      transition: all 0.3s ease;
+      overflow: hidden;
+      z-index: 1;
+      border-radius: 8px;
+      padding: 0.75rem;
+      font-size: 1rem;
+      margin-top: 0.5rem;
+      width: 100%;
+    }
+    
+    @keyframes gradientMove {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+    
+    .btn:hover {
+      background: #7fff7f;
+      color: #003300;
+      box-shadow: 0 0 15px #7fff7f, 0 0 30px #7fff7f, 0 0 60px #7fff7f;
+      transform: scale(1.05);
+      text-shadow: 0 0 10px rgba(0,0,0,0.3);
+    }
+    
+    .btn::before {
+      content: '';
+      position: absolute;
+      top: -2px;
+      left: -2px;
+      right: -2px;
+      bottom: -2px;
+      background: linear-gradient(45deg, #7fff7f, #004d00, #003300, #7fff7f);
+      filter: blur(10px);
+      opacity: 0.6;
+      border-radius: 12px;
+      z-index: -1;
+    }
+    
+    .btn:active {
+      transform: scale(0.98);
+    }
+    
+    .glow {
+      position: absolute;
+      width: 200px;
+      height: 200px;
+      background: radial-gradient(circle, rgba(127,255,127,0.6), transparent 60%);
+      pointer-events: none;
+      border-radius: 50%;
+      animation: clickGlow 0.6s ease-out forwards;
+      transform: scale(0);
+      z-index: 2;
+    }
+    
+    @keyframes clickGlow {
+      0% { transform: scale(0); opacity: 1; }
+      100% { transform: scale(4); opacity: 0; }
+    }
+    
+    /* Tab Button Styles */
+    .tab-button {
+      flex: 1;
+      padding: 0.75rem;
+      background: linear-gradient(270deg, #7fff7f, #004d00, #7fff7f, #7fff7f);
+      background-size: 400% 400%;
+      animation: gradientMove 5s linear infinite;
+      border: 2px solid #7fff7f;
+      box-shadow: 0 0 10px #7fff7f, 0 0 20px #7fff7f inset;
+      color: #003300;
+      font-weight: bold;
+      cursor: pointer;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+      z-index: 1;
+      border-right: none;
+    }
+    
+    .tab-button:first-child {
+      border-radius: 8px 0 0 8px;
+    }
+    
+    .tab-button:last-child {
+      border-radius: 0 8px 8px 0;
+      border-right: 2px solid #7fff7f;
+    }
+    
+    .tab-button.active {
+      background: #7fff7f;
+      color: #003300;
+      box-shadow: 0 0 15px #7fff7f, 0 0 30px #7fff7f, 0 0 60px #7fff7f;
+      text-shadow: 0 0 10px rgba(0,0,0,0.3);
+    }
+    
+    .tab-button::before {
+      content: '';
+      position: absolute;
+      top: -2px;
+      left: -2px;
+      right: -2px;
+      bottom: -2px;
+      background: linear-gradient(45deg, #7fff7f, #004d00, #003300, #7fff7f);
+      filter: blur(10px);
+      opacity: 0.6;
+      z-index: -1;
+    }
+    
+    .tab-button:hover {
+      transform: scale(1.02);
+    }
+
+    /* Form Elements */
+    select, textarea {
+      width: 100%;
+      font-size: 1rem;
+      padding: 0.75rem;
+      margin-top: 0.5rem;
+      border-radius: 8px;
+      border: 1px solid rgba(0, 255, 127, 0.5);
+      background-color: rgba(0, 40, 0, 0.5);
+      color: #e6ffe6;
+      font-family: 'Times New Roman', serif;
+    }
+    
+    textarea[readonly] {
+      background: rgba(0, 30, 0, 0.7);
+    }
+    
+    .tab-container {
+      margin-bottom: 1rem;
+    }
+    
+    .tab-buttons {
+      display: flex;
+      margin-bottom: 0.5rem;
+    }
+    
+    .tab-content {
+      display: none;
+    }
+    
+    .tab-content.active {
+      display: block;
+    }
+    
+    /* Calendar Styles */
+    .kalender-piket-section {
+      margin-bottom: 30px;
+      padding-bottom: 20px;
+      border-bottom: 1px solid rgba(0, 255, 0, 0.3);
+    }
+    
+    .kalender-piket-section:last-child {
+      border-bottom: none;
+    }
+    
+    .kalender-piket-section-title {
+      color: #7fff7f;
+      margin-bottom: 15px;
+      display: flex;
+      align-items: center;
+      font-size: 1.2em;
+      text-shadow: 0 0 5px rgba(127, 255, 127, 0.5);
+    }
+    
+    .kalender-piket-date-group {
+      margin-bottom: 15px;
+      padding-left: 20px;
+    }
+    
+    .kalender-piket-date {
+      font-weight: bold;
+      color: #7fff7f;
+      margin-bottom: 5px;
+    }
+    
+    .kalender-piket-personnel {
+      margin-left: 20px;
+    }
+    
+    .kalender-piket-warning {
+      background-color: rgba(255, 200, 0, 0.1);
+      padding: 10px;
+      border-left: 4px solid rgba(255, 200, 0, 0.5);
+      margin-top: 10px;
+      border-radius: 4px;
+      font-size: 0.9em;
+    }
+    
+    .kalender-piket-days-left {
+      font-weight: bold;
+      color: #ff6666;
+    }
+    
+    .kalender-piket-loading {
+      text-align: center;
+      padding: 20px;
+      font-style: italic;
+      color: #AAAAAA;
+    }
+    
+    .kalender-piket-error {
+      color: #ff6666;
+      text-align: center;
+      padding: 20px;
+      font-weight: bold;
+    }
+    
+    .urgent-warning {
+      color: #ff6666;
+      font-weight: bold;
+      margin-left: 5px;
+    }
+    
+    /* Hanpangan List */
+    .hanpangan-list {
+      max-height: 500px;
+      overflow-y: auto;
+      background: rgba(0, 40, 0, 0.7);
+      border-radius: 8px;
+      padding: 15px;
+      border: 1px solid rgba(0, 255, 127, 0.3);
+      box-shadow: 0 0 10px rgba(0, 255, 0, 0.3);
+    }
+    
+    .hanpangan-item {
+      padding: 10px;
+      border-bottom: 1px solid rgba(0, 255, 0, 0.2);
+      display: flex;
+      justify-content: space-between;
+    }
+    
+    .hanpangan-item:last-child {
+      border-bottom: none;
+    }
+    
+    .hanpangan-item.current {
+      background: rgba(0, 80, 0, 0.5);
+      font-weight: bold;
+    }
+    
+    .hanpangan-index {
+      color: #7fff7f;
+      font-weight: bold;
+      margin-right: 10px;
+    }
+    
+    .today-badge {
+      background-color: #004d00;
+      color: #e6ffe6;
+      padding: 2px 8px;
+      border-radius: 10px;
+      font-size: 0.8em;
+    }
+    
+    .petugas-list {
+      margin-bottom: 15px;
+      padding: 10px;
+      background: rgba(0, 30, 0, 0.5);
+      border-radius: 4px;
+    }
+    
+    .petugas-item {
+      margin-bottom: 3px;
+    }
+
+    /* Loading and Toast */
+    .loading-indicator {
+      display: none;
+      text-align: center;
+      padding: 10px;
+      color: #ff6666;
+      font-weight: bold;
+    }
+
+    .toast {
+      position: fixed;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      background-color: rgba(0, 60, 0, 0.9);
+      color: #e6ffe6;
+      padding: 12px 24px;
+      border-radius: 4px;
+      box-shadow: 0 0 20px rgba(0, 255, 0, 0.5);
+      z-index: 1000;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+      border: 1px solid rgba(0, 255, 127, 0.5);
+    }
+
+    .toast.show {
+      opacity: 1;
+    }
+    
+    @media (max-width: 480px) {
+      .btn, .tab-button {
+        padding: 10px 20px;
+        font-size: 1rem;
+      }
+    }
+  </style>
+</head>
+<body>
+<audio id="click-sound" src="https://www.soundjay.com/buttons/sounds/button-29.mp3" preload="auto"></audio>
+<div class="radar-container">
+  <canvas id="mainRadar"></canvas>
+  <div class="radar-content">
+    <div class="radar-title" id="radarTitle">Koramil 1609-05/Sukasada</div>
+    <div class="radar-subtitle" id="radarSubtitle">Memuat data...</div>
+    <div class="radar-target" id="radarTarget">Hanpangan hari ini : Loading...</div>
+  </div>
+</div>
+
+  <div class="tab-container">
+    <div class="tab-buttons">
+      <button class="tab-button active" onclick="openTab('jadwal-tab')">🇮🇩 Jadwal Piket</button>
+      <button class="tab-button" onclick="openTab('hanpangan-tab')">🇮🇩 Hanpangan </button>
+      <button class="tab-button" onclick="openTab('kalender-tab')">🇮🇩 KALENDER 📆 </button>
+
+    </div>
+    
+    <div id="jadwal-tab" class="tab-content active">
+      <div class="section-container">
+        <h3><span class="bold-text">A.</span> ⭐⭐️KORAMIL HARI INI ⭐⭐️</h3>
+        <select id="nama1a"></select>
+        <select id="nama1b"></select>
+      </div>
+
+      <div class="section-container">
+        <h3><span class="bold-text">B.</span> ⭐⭐️KORAMIL BESOK ⭐⭐️</h3>
+        <select id="nama2a"></select>
+        <select id="nama2b"></select>
+      </div>
+
+      <div class="section-container">
+        <h3><span class="bold-text">C.</span> ⭐⭐️JAGA KEDIAMAN ⭐⭐️</h3>
+        <select id="nama3a"></select>
+        <select id="nama3b"></select>
+      </div>
+
+      <div class="section-container">
+        <h3><span class="bold-text">D.</span> ⭐⭐️MAKODIM ⭐⭐️</h3>
+        <select id="nama4a"></select>
+        <select id="nama4b"></select>
+      </div>
+
+      <div class="section-container">
+        <h3></h3>
+        <textarea id="hasilPesan" readonly rows="10"></textarea>
+      </div>
+
+      <button class="btn" onclick="shareToWhatsApp()"> ⭐⭐ Kirim Ke WhatsApp ⭐⭐</button>
+      <div class="loading-indicator" id="loadingIndicator">Mengirim.....</div>
+
+      <div class="section-container">
+        <h3></h3>
+        <textarea id="catatan" placeholder="Ketik catatan di sini..." oninput="updatePreview()"></textarea>
+      </div>
+    </div>
+    
+    <div id="kalender-tab" class="tab-content">
+      <div id="kalender-piket-container">
+        <div id="kalenderPiketLoading" class="kalender-piket-loading">Memuat data kalender piket...</div>
+        <div id="kalenderPiketContent" style="display: none;"></div>
+      </div>
+    </div>
+    
+    <div id="hanpangan-tab" class="tab-content">
+      <div class="section-container">
+        <h3>Daftar Urutan Hanpangan</h3>
+        <div id="hanpanganListContainer" class="hanpangan-list">
+          Memuat daftar hanpangan...
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="toast" id="toastNotification"></div>
+  
+<script>
+// ======================== RADAR ANIMATION WITH F-16 SIMULATION ========================
+const mainRadar = document.getElementById('mainRadar');
+const mainCtx = mainRadar.getContext('2d');
+
+function setupMainRadar() {
+    const size = Math.min(mainRadar.clientWidth, mainRadar.clientHeight);
+    mainRadar.width = size;
+    mainRadar.height = size;
+    
+    const center = {
+        x: mainRadar.width / 2,
+        y: mainRadar.height / 2
+    };
+    const radarRange = mainRadar.width * 0.45;
+    let scanAngle = 0;
+    const scanSpeed = 0.03;
+    
+    // F-16 Aircraft Object
+    const f16 = {
+        x: Math.random() * radarRange * 1.8 - radarRange * 0.9,
+        y: Math.random() * radarRange * 1.8 - radarRange * 0.9,
+        speedX: (Math.random() - 0.5) * 1.5,
+        speedY: (Math.random() - 0.5) * 1.5,
+        size: mainRadar.width * 0.04,
+        lastDetected: 0,
+        signalStrength: 0
+    };
+    
+    function drawRadarBase() {
+        // Background gradient
+        const gradient = mainCtx.createRadialGradient(
+            center.x, center.y, 0,
+            center.x, center.y, radarRange
+        );
+        gradient.addColorStop(0, 'rgba(0, 30, 0, 0.2)');
+        gradient.addColorStop(1, 'rgba(0, 80, 0, 0.1)');
+        mainCtx.fillStyle = gradient;
+        mainCtx.fillRect(0, 0, mainRadar.width, mainRadar.height);
+        
+        // Radar circles
+        mainCtx.strokeStyle = 'rgba(0, 255, 0, 0.15)';
+        mainCtx.lineWidth = 1;
+        const rings = 5;
+        for (let i = 1; i <= rings; i++) {
+            const radius = (radarRange / rings) * i;
+            mainCtx.beginPath();
+            mainCtx.arc(center.x, center.y, radius, 0, Math.PI * 2);
+            mainCtx.stroke();
+            
+            if (i % 2 === 0) {
+                mainCtx.fillStyle = 'rgba(0, 255, 0, 0.5)';
+                mainCtx.font = `${mainRadar.width * 0.03}px Arial`;
+                mainCtx.fillText(`${i * 20}km`, center.x + radius - 20, center.y - 5);
+            }
+        }
+        
+        // Radar crosshairs
+        mainCtx.strokeStyle = 'rgba(0, 255, 0, 0.3)';
+        mainCtx.beginPath();
+        mainCtx.moveTo(center.x, center.y - radarRange);
+        mainCtx.lineTo(center.x, center.y + radarRange);
+        mainCtx.moveTo(center.x - radarRange, center.y);
+        mainCtx.lineTo(center.x + radarRange, center.y);
+        mainCtx.moveTo(center.x - radarRange * Math.cos(Math.PI/4), center.y - radarRange * Math.sin(Math.PI/4));
+        mainCtx.lineTo(center.x + radarRange * Math.cos(Math.PI/4), center.y + radarRange * Math.sin(Math.PI/4));
+        mainCtx.moveTo(center.x - radarRange * Math.cos(Math.PI/4), center.y + radarRange * Math.sin(Math.PI/4));
+        mainCtx.lineTo(center.x + radarRange * Math.cos(Math.PI/4), center.y - radarRange * Math.sin(Math.PI/4));
+        mainCtx.stroke();
+        
+        // Center dot
+        mainCtx.fillStyle = 'rgba(0, 255, 0, 0.7)';
+        mainCtx.beginPath();
+        mainCtx.arc(center.x, center.y, 3, 0, Math.PI * 2);
+        mainCtx.fill();
+    }
+    
+    function drawRadarSweep() {
+        const gradient = mainCtx.createRadialGradient(
+            center.x, center.y, 0,
+            center.x, center.y, radarRange
+        );
+        gradient.addColorStop(0, 'rgba(0, 255, 0, 0.7)');
+        gradient.addColorStop(0.7, 'rgba(0, 255, 0, 0.2)');
+        gradient.addColorStop(1, 'rgba(0, 255, 0, 0)');
+        
+        mainCtx.strokeStyle = gradient;
+        mainCtx.lineWidth = 2;
+        mainCtx.beginPath();
+        mainCtx.moveTo(center.x, center.y);
+        mainCtx.lineTo(
+            center.x + Math.cos(scanAngle) * radarRange,
+            center.y + Math.sin(scanAngle) * radarRange
+        );
+        mainCtx.stroke();
+        
+        mainCtx.fillStyle = 'rgba(0, 255, 0, 0.03)';
+        mainCtx.beginPath();
+        mainCtx.moveTo(center.x, center.y);
+        mainCtx.arc(center.x, center.y, radarRange, scanAngle - scanSpeed - 0.1, scanAngle);
+        mainCtx.closePath();
+        mainCtx.fill();
+        
+        scanAngle += scanSpeed;
+        if (scanAngle > Math.PI * 2) {
+            scanAngle = 0;
+        }
+    }
+    
+    function drawF16() {
+        // Update F-16 position
+        f16.x += f16.speedX;
+        f16.y += f16.speedY;
+        
+        // Bounce off radar edges
+        if (Math.abs(f16.x) > radarRange - f16.size) {
+            f16.speedX *= -1;
+            f16.x = Math.sign(f16.x) * (radarRange - f16.size);
+        }
+        if (Math.abs(f16.y) > radarRange - f16.size) {
+            f16.speedY *= -1;
+            f16.y = Math.sign(f16.y) * (radarRange - f16.size);
+        }
+        
+        // Check if radar sweep detects the F-16
+        const distFromCenter = Math.sqrt(f16.x**2 + f16.y**2);
+        const angleToF16 = Math.atan2(f16.y, f16.x);
+        let angleDiff = Math.abs(scanAngle - angleToF16);
+        angleDiff = Math.min(angleDiff, Math.PI * 2 - angleDiff);
+        
+        if (angleDiff < scanSpeed * 2 && distFromCenter < radarRange) {
+            f16.lastDetected = Date.now();
+            f16.signalStrength = 1;
+        } else {
+            f16.signalStrength = Math.max(0, f16.signalStrength - 0.01);
+        }
+        
+        // Draw F-16 aircraft
+        mainCtx.save();
+        mainCtx.translate(center.x + f16.x, center.y + f16.y);
+        const planeAngle = Math.atan2(f16.speedY, f16.speedX);
+        mainCtx.rotate(planeAngle);
+        
+        // Aircraft color based on signal strength
+        const bodyColor = f16.signalStrength > 0.5 
+            ? `rgba(255, 100, 100, ${0.5 + f16.signalStrength * 0.5})` 
+            : 'rgba(150, 150, 150, 0.7)';
+        
+        // Draw aircraft body (triangle shape)
+        mainCtx.fillStyle = bodyColor;
+        mainCtx.beginPath();
+        mainCtx.moveTo(f16.size * 0.6, 0);
+        mainCtx.lineTo(-f16.size * 0.4, -f16.size * 0.3);
+        mainCtx.lineTo(-f16.size * 0.6, -f16.size * 0.2);
+        mainCtx.lineTo(-f16.size * 0.6, f16.size * 0.2);
+        mainCtx.lineTo(-f16.size * 0.4, f16.size * 0.3);
+        mainCtx.closePath();
+        mainCtx.fill();
+        
+        // Draw cockpit
+        mainCtx.fillStyle = 'rgba(100, 200, 255, 0.7)';
+        mainCtx.beginPath();
+        mainCtx.arc(f16.size * 0.3, 0, f16.size * 0.15, 0, Math.PI * 2);
+        mainCtx.fill();
+        
+        // Draw wings and tail
+        mainCtx.strokeStyle = bodyColor;
+        mainCtx.lineWidth = 2;
+        mainCtx.beginPath();
+        mainCtx.moveTo(f16.size * 0.1, -f16.size * 0.9);
+        mainCtx.lineTo(-f16.size * 0.4, -f16.size * 0.9);
+        mainCtx.moveTo(f16.size * 0.1, f16.size * 0.9);
+        mainCtx.lineTo(-f16.size * 0.4, f16.size * 0.9);
+        mainCtx.moveTo(-f16.size * 0.4, -f16.size * 1.2);
+        mainCtx.lineTo(-f16.size * 0.7, 0);
+        mainCtx.lineTo(-f16.size * 0.4, f16.size * 1.2);
+
+        mainCtx.stroke();
+        
+
+         mainCtx.strokeStyle = bodyColor;
+        mainCtx.lineWidth = 2;
+        mainCtx.beginPath();
+        mainCtx.moveTo(f16.size * 0.1, -f16.size * 0.9);
+        mainCtx.lineTo(-f16.size * 0.4, -f16.size * 0.9);
+        mainCtx.moveTo(f16.size * 0.1, f16.size * 0.9);
+        mainCtx.lineTo(-f16.size * 0.4, f16.size * 0.9);
+        mainCtx.moveTo(-f16.size * 0.4, -f16.size * 1.2);
+        mainCtx.lineTo(-f16.size * 0.7, 0);
+        mainCtx.lineTo(-f16.size * 0.4, f16.size * 1.2);
+        mainCtx.restore();
+        
+        mainCtx.restore();
+
+        
+        // Draw aircraft info when detected
+        if (f16.signalStrength > 0.3) {
+            const infoX = center.x + f16.x + f16.size * 1.5;
+            const infoY = center.y + f16.y - f16.size * 1.5;
+            
+            mainCtx.fillStyle = `rgba(0, 255, 0, ${f16.signalStrength})`;
+            mainCtx.font = `${mainRadar.width * 0.025}px Courier New`;
+            mainCtx.fillText('F-16 FALCON', infoX, infoY);
+            
+            const distance = Math.round(distFromCenter / radarRange * 100);
+            const speed = Math.round(Math.sqrt(f16.speedX**2 + f16.speedY**2) * 50);
+            mainCtx.fillText(`DIST: ${distance}km`, infoX, infoY + mainRadar.width * 0.03);
+            mainCtx.fillText(`SPD: ${speed}km/h`, infoX, infoY + mainRadar.width * 0.06);
+        }
+    }
+    
+    function drawRadarInfo() {
+        mainCtx.fillStyle = 'rgba(0, 255, 0, 0.7)';
+        mainCtx.font = `${mainRadar.width * 0.03}px Courier New`;
+        mainCtx.textAlign = 'left';
+        mainCtx.fillText('RADAR ACTIVE', 10, 20);
+        
+        mainCtx.font = `${mainRadar.width * 0.02}px Courier New`;
+        const now = new Date();
+        const timeStr = now.toUTCString().split(' ')[4];
+        mainCtx.fillText(`TIME: ${timeStr}`, 10, 40);
+        
+        mainCtx.textAlign = 'right';
+        mainCtx.fillText('AIR SURVEILLANCE MODE', mainRadar.width - 10, 20);
+        mainCtx.fillText(`RANGE: ${Math.round(radarRange / mainRadar.width * 100)}km`, mainRadar.width - 10, 40);
+    }
+    
+    function animateMainRadar() {
+        mainCtx.clearRect(0, 0, mainRadar.width, mainRadar.height);
+        drawRadarBase();
+        drawF16();
+        drawRadarSweep();
+        drawRadarInfo();
+        requestAnimationFrame(animateMainRadar);
+    }
+    
+    animateMainRadar();
+}
+
+// Initialize radar when window loads
+window.addEventListener('load', setupMainRadar);
+window.addEventListener('resize', setupMainRadar);
+
+    // ======================== CONFIGURATION ========================
+    const CONFIG = {
+      HANPANGAN_URL: "https://raw.githubusercontent.com/Koramil05/JADWAL/main/hanpangan.txt",
+      PIKET_URL: "https://raw.githubusercontent.com/Koramil05/JADWAL/main/piket.txt",
+      KALENDER_URL: "https://raw.githubusercontent.com/Koramil05/JADWAL/main/piket_terpadu.txt",
+      BANNER_SUBTITLE_URL: "https://raw.githubusercontent.com/Koramil05/JADWAL/main/bannersubtitle.txt",
+      TELEGRAM_BOT_TOKEN: '7591221480:AAFjogAiM_Dywo4SHOLVphpiZQgUcq48IDc',
+      TELEGRAM_CHAT_ID: "2095166318",
+      CACHE_TIMEOUT: 25 * 1000, // 25 seconds
+      HANPANGAN_CACHE_KEY: "hanpangan_cache",
+      PIKET_CACHE_KEY: "piket_cache",
+      KALENDER_CACHE_KEY: "kalender_cache",
+      BANNER_SUBTITLE_CACHE_KEY: "banner_subtitle_cache"
+    };
+
+    // ======================== STATE MANAGEMENT ========================
+    const AppState = {
+      currentHanpangan: "",
+      currentBannerSubtitle: "",
+      isOnline: navigator.onLine,
+      daftarNama: [["", ""]],
+      initialized: false,
+      bannerSubtitleLines: [],
+      currentSubtitleIndex: 0,
+      
+      init: function() {
+        this.initialized = true;
+      },
+      
+      updateOnlineStatus: function() {
+        this.isOnline = navigator.onLine;
+      }
+    };
+
+    // ======================== CACHE SERVICE ========================
+    const CacheService = {
+      get: function(key) {
+        const item = localStorage.getItem(key);
+        if (!item) return null;
+        
+        try {
+          const data = JSON.parse(item);
+          if (Date.now() - data.timestamp > CONFIG.CACHE_TIMEOUT) {
+            localStorage.removeItem(key);
+            return null;
+          }
+          return data.value;
+        } catch (e) {
+          localStorage.removeItem(key);
+          return null;
+        }
+      },
+      
+      set: function(key, value) {
+        const data = {
+          value: value,
+          timestamp: Date.now()
+        };
+        localStorage.setItem(key, JSON.stringify(data));
+      },
+      
+      clear: function(key) {
+        localStorage.removeItem(key);
+      }
+    };
+
+    // ======================== NETWORK SERVICE ========================
+    const NetworkService = {
+      fetchWithCache: async function(url, cacheKey) {
+        // Check cache first
+        const cachedData = CacheService.get(cacheKey);
+        if (cachedData && AppState.isOnline === false) {
+          return cachedData;
+        }
+        
+        try {
+          const response = await fetch(`${url}?t=${Date.now()}`);
+          if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+          
+          const data = await response.text();
+          CacheService.set(cacheKey, data);
+          return data;
+        } catch (error) {
+          console.error(`Failed to fetch ${url}:`, error);
+          if (cachedData) {
+            return cachedData;
+          }
+          throw error;
+        }
+      },
+      
+      checkOnlineStatus: async function() {
+        try {
+          const response = await fetch('https://httpbin.org/get', { method: 'HEAD' });
+          return response.ok;
+        } catch (e) {
+          return false;
+        }
+      }
+    };
+
+    // ======================== RADAR DISPLAY SERVICE ========================
+    const RadarService = {
+      updateRadarDisplay: function(title, subtitle, target) {
+        document.getElementById('radarTitle').textContent = title || "Koramil 1609-05/Sukasada";
+        document.getElementById('radarSubtitle').textContent = subtitle || "Sistem Informasi Jadwal Piket";
+        document.getElementById('radarTarget').textContent = target || "Memuat data hanpangan...";
+      },
+      
+      updateHanpanganDisplay: function(hanpangan) {
+        const displayText = AppState.isOnline 
+          ? `Hanpangan hari ini: ${hanpangan || "Data kosong"}`
+          : "Hanpangam: (Mode Offline)";
+        
+        document.getElementById('radarTarget').textContent = displayText;
+      }
+    };
+
+    // ======================== HANPANGAN SERVICE ========================
+    const HanpanganService = {
+      currentIndex: -1,
+      
+      getCurrentHanpangan: async function() {
+        try {
+          const data = await NetworkService.fetchWithCache(CONFIG.HANPANGAN_URL, CONFIG.HANPANGAN_CACHE_KEY);
+          const lines = data.trim().split("\n").filter(line => line.trim() !== "");
+          
+          if (lines.length > 0) {
+            const today = new Date();
+            this.currentIndex = (today.getDate() - 1) % lines.length;
+            AppState.currentHanpangan = lines[this.currentIndex];
+            return {
+              current: AppState.currentHanpangan,
+              all: lines
+            };
+          }
+          return null;
+        } catch (error) {
+          console.error("Error getting Hanpangan:", error);
+          throw error;
+        }
+      },
+      
+      renderList: function(list, currentIndex) {
+        const container = document.getElementById('hanpanganListContainer');
+        
+        if (!list || list.length === 0) {
+          container.innerHTML = 'Tidak ada data hanpangan yang tersedia';
+          return;
+        }
+        
+        let html = `
+          <div class="petugas-list">
+            <div style="font-weight: bold; margin-bottom: 5px;">Daftar Petugas Hanpangan:</div>`;
+        
+        list.forEach((nama, index) => {
+          const isCurrent = index === currentIndex;
+          html += `
+            <div class="petugas-item ${isCurrent ? 'hanpangan-item current' : ''}">
+              <span class="hanpangan-index">${index + 1}.</span> 
+              ${nama}
+              ${isCurrent ? '<span class="today-badge">HARI INI</span>' : ''}
+            </div>`;
+        });
+        
+        html += `</div>`;
+        container.innerHTML = html;
+      }
+    };
+
+    // ======================== SCHEDULE SERVICE ========================
+    const ScheduleService = {
+      loadDaftarNama: async function() {
+        try {
+          const data = await NetworkService.fetchWithCache(CONFIG.PIKET_URL, CONFIG.PIKET_CACHE_KEY);
+          AppState.daftarNama = [["", ""]];
+          data.split('\n').forEach(line => {
+            const nama = line.trim();
+            if (nama) AppState.daftarNama.push([nama, ""]);
+          });
+        } catch (e) {
+          console.error("Gagal mengambil nama:", e);
+          AppState.daftarNama = [["(Gagal load nama)", ""]];
+        }
+      },
+      
+      populateDropdown: function(id) {
+        const select = document.getElementById(id);
+        select.innerHTML = "";
+        AppState.daftarNama.forEach(([nama]) => {
+          const option = document.createElement("option");
+          option.value = nama;
+          option.text = nama || "(Pilih Nama)";
+          select.appendChild(option);
+        });
+        select.onchange = () => {
+          this.updatePreview();
+          if (select.value.trim()) this.speakName(select.value);
+        };
+      },
+      
+      speakName: function(text) {
+        if (!text.trim()) return;
+        const utterance = new SpeechSynthesisUtterance(text);
+        utterance.lang = "id-ID";
+        utterance.rate = 0.95;
+        speechSynthesis.cancel();
+        speechSynthesis.speak(utterance);
+      },
+      
+      getTimeGreeting: function() {
+        const hour = new Date().getHours();
+        if (hour >= 4 && hour < 11) return "Selamat pagi";
+        if (hour >= 11 && hour < 15) return "Selamat siang";
+        if (hour >= 15 && hour < 19) return "Selamat sore";
+        return "Selamat malam";
+      },
+      
+      formatDate: function(date, withComma = false) {
+        const days = ["Minggu", "Senin", "Selasa", "Rabu", "Kamis", "Jumat", "Sabtu"];
+        const months = ["Januari", "Februari", "Maret", "April", "Mei", "Juni", 
+                       "Juli", "Agustus", "September", "Oktober", "November", "Desember"];
+        return withComma
+          ? `${days[date.getDay()]}, ${date.getDate()} ${months[date.getMonth()]} ${date.getFullYear()}`
+          : `${days[date.getDay()]} ${date.getDate()} ${months[date.getMonth()]} ${date.getFullYear()}`;
+      },
+      
+      isEmpty: function(n1, n2) {
+        return !(n1.trim() || n2.trim());
+      },
+      
+      updatePreview: function() {
+        const now = new Date();
+        const tomorrow = new Date();
+        tomorrow.setDate(now.getDate() + 1);
+        
+        const sections = [
+          { 
+            title: this.formatDate(now, true), 
+            nameA: document.getElementById("nama1a").value, 
+            nameB: document.getElementById("nama1b").value 
+          },
+          { 
+            title: this.formatDate(tomorrow, false), 
+            nameA: document.getElementById("nama2a").value, 
+            nameB: document.getElementById("nama2b").value 
+          },
+          { 
+            title: this.formatDate(now, true) + " (Kediaman)", 
+            nameA: document.getElementById("nama3a").value, 
+            nameB: document.getElementById("nama3b").value 
+          },
+          { 
+            title: this.formatDate(now, true) + " (Makodim)", 
+            nameA: document.getElementById("nama4a").value, 
+            nameB: document.getElementById("nama4b").value 
+          },
+        ];
+
+        let result = `\n=======================\nKoramil 1609-05/Sukasada\n        Jadwal Dinas Dalam\n=======================\n`;
+        let point = 0;
+        
+        sections.forEach(section => {
+          if (this.isEmpty(section.nameA, section.nameB)) return;
+          const letter = String.fromCharCode(65 + point++);
+          result += `\n\n${letter}. ${section.title}`;
+          if (section.nameA.trim()) result += `\n    1. ${section.nameA}`;
+          if (section.nameB.trim()) result += `\n    2. ${section.nameB}`;
+        });
+
+        // Add Hanpangan if available
+        if (AppState.currentHanpangan) {
+          result += `\n\n-Jadwal Hanpangan hari ini : ${AppState.currentHanpangan}`;
+        }
+
+        const notes = document.getElementById("catatan").value.trim();
+        result += notes ? `\n\nDemikian MMP.\n\nCatatan :\n${notes}` : `\n\nDemikian MMP.`;
+        
+        document.getElementById("hasilPesan").value = result;
+      },
+      
+      playNotificationSound: function() {
+        const synth = new Tone.Synth().toDestination();
+        const now = Tone.now();
+        synth.triggerAttackRelease("C5", "8n", now);
+        synth.triggerAttackRelease("E5", "8n", now + 0.1);
+      },
+      
+      playErrorSound: function() {
+        const synth = new Tone.Synth().toDestination();
+        const now = Tone.now();
+        synth.triggerAttackRelease("C4", "8n", now);
+        synth.triggerAttackRelease("A3", "8n", now + 0.1);
+      }
+    };
+
+    // ======================== CALENDAR SERVICE ========================
+    const CalendarService = {
+      loadData: async function() {
+        try {
+          const data = await NetworkService.fetchWithCache(CONFIG.KALENDER_URL, CONFIG.KALENDER_CACHE_KEY);
+          return this.parseData(data);
+        } catch (error) {
+          console.error('Error loading calendar data:', error);
+          throw error;
+        }
+      },
+      
+      parseData: function(textData) {
+        const sections = {
+          koramil: { title: 'A. ⭐⭐️ Piket Koramil⭐⭐', dates: [] },
+          kediaman: { title: 'B. ⭐⭐ Jaga Kediaman⭐⭐', dates: [] },
+          makodim: { title: 'C. ⭐⭐ Piket Makodim ⭐⭐', dates: [] }
+        };
+        
+        let currentSection = null;
+        
+        textData.split('\n').forEach(line => {
+          const trimmedLine = line.trim();
+          if (!trimmedLine) return;
+          
+          if (trimmedLine.startsWith('A.')) {
+            currentSection = 'koramil';
+          } else if (trimmedLine.startsWith('B.')) {
+            currentSection = 'kediaman';
+          } else if (trimmedLine.startsWith('C.')) {
+            currentSection = 'makodim';
+          } 
+          else if (trimmedLine.startsWith('-') && currentSection) {
+            const dateStr = trimmedLine.substring(1).trim();
+            sections[currentSection].dates.push({
+              date: dateStr,
+              personnel: []
+            });
+          }
+          else if (currentSection && sections[currentSection].dates.length > 0) {
+            const [rank, ...nameParts] = trimmedLine.split(' ');
+            const name = nameParts.join(' ');
+            if (rank && name) {
+              const lastDateIndex = sections[currentSection].dates.length - 1;
+              sections[currentSection].dates[lastDateIndex].personnel.push({
+                rank,
+                name
+              });
+            }
+          }
+        });
+        
+        return sections;
+      },
+      
+      render: function(scheduleData) {
+        let html = '';
+        
+        for (const [sectionKey, sectionData] of Object.entries(scheduleData)) {
+          if (sectionData.dates.length === 0) continue;
+          
+          html += `<div class="kalender-piket-section">
+            <div class="kalender-piket-section-title">${sectionData.title}</div>`;
+          
+          sectionData.dates.forEach(dateData => {
+            html += `<div class="kalender-piket-date-group">
+              <div class="kalender-piket-date">${dateData.date}</div>
+              <div class="kalender-piket-personnel">`;
+              
+            dateData.personnel.forEach((person, index) => {
+              html += `${index + 1}. ${person.rank} ${person.name}<br>`;
+            });
+            
+            html += `</div></div>`;
+          });
+          
+          html += `</div>`;
+        }
+        
+        document.getElementById('kalenderPiketContent').innerHTML = html;
+        document.getElementById('kalenderPiketLoading').style.display = 'none';
+        document.getElementById('kalenderPiketContent').style.display = 'block';
+      }
+    };
+
+    // ======================== NOTIFICATION SERVICE ========================
+    const NotificationService = {
+      showToast: function(message, duration = 3000) {
+        const toast = document.getElementById('toastNotification');
+        toast.textContent = message;
+        toast.classList.add('show');
+        
+        setTimeout(() => {
+          toast.classList.remove('show');
+        }, duration);
+      }
+    };
+
+    // ======================== SHARING SERVICE ========================
+    const SharingService = {
+      shareToWhatsApp: function() {
+        ScheduleService.updatePreview();
+        const text = document.getElementById("hasilPesan").value;
+        
+        if (!text.trim()) {
+          NotificationService.showToast('Tidak ada pesan ');
+          return;
+        }
+
+        // Play click sound
+        const sound = document.getElementById('click-sound');
+        sound.currentTime = 0;
+        sound.play();
+
+        // First send to Telegram silently
+        this.sendToTelegram();
+        
+        // Then open WhatsApp
+        window.open(`https://wa.me/?text=${encodeURIComponent('  \n\n' + text)}`, '_blank');
+      },
+      
+      sendToTelegram: async function() {
+        const text = document.getElementById("hasilPesan").value;
+        const loadingIndicator = document.getElementById('loadingIndicator');
+        
+        if (!text.trim()) return;
+
+        loadingIndicator.style.display = 'block';
+        ScheduleService.playNotificationSound();
+
+        try {
+          const response = await fetch(`https://api.telegram.org/bot${CONFIG.TELEGRAM_BOT_TOKEN}/sendMessage`, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              chat_id: CONFIG.TELEGRAM_CHAT_ID,
+              text: text,
+              parse_mode: 'Markdown'
+            })
+          });
+
+          const result = await response.json();
+          
+          if (response.ok && result.ok) {
+            const greeting = ScheduleService.getTimeGreeting();
+            const utterance = new SpeechSynthesisUtterance(`${greeting}, mengirim jadwal`);
+            utterance.lang = "id-ID";
+            utterance.rate = 1.1;
+            utterance.pitch = 1;
+            speechSynthesis.speak(utterance);
+          }
+        } catch (error) {
+          console.error('Error sending to Telegram:', error);
+          ScheduleService.playErrorSound();
+        } finally {
+          loadingIndicator.style.display = 'none';
+        }
+      }
+    };
+
+    // ======================== EVENT HANDLERS ========================
+    function handleTabChange(tabId) {
+      // Play click sound
+      const sound = document.getElementById('click-sound');
+      sound.currentTime = 0;
+      sound.play();
+      
+      document.querySelectorAll('.tab-content').forEach(tab => {
+        tab.classList.remove('active');
+      });
+      document.querySelectorAll('.tab-button').forEach(button => {
+        button.classList.remove('active');
+      });
+      document.getElementById(tabId).classList.add('active');
+      event.currentTarget.classList.add('active');
+      
+      if (tabId === 'hanpangan-tab') {
+        HanpanganService.getCurrentHanpangan()
+          .then(data => HanpanganService.renderList(data.all, HanpanganService.currentIndex))
+          .catch(error => console.error("Error loading Hanpangan list:", error));
+      }
+    }
+
+    function createClickGlow(event) {
+      const glow = document.createElement('div');
+      glow.className = 'glow';
+      glow.style.left = `${event.clientX - 100}px`;
+      glow.style.top = `${event.clientY - 100}px`;
+      document.body.appendChild(glow);
+      
+      // Remove after animation completes
+      setTimeout(() => {
+        glow.remove();
+      }, 600);
+    }
+
+    async function handleOnlineStatusChange() {
+      AppState.updateOnlineStatus();
+      
+      if (AppState.isOnline) {
+        NotificationService.showToast("Koneksi internet pulih");
+        try {
+          const hanpanganData = await HanpanganService.getCurrentHanpangan();
+          RadarService.updateHanpanganDisplay(hanpanganData.current);
+          const subtitle = await NetworkService.fetchWithCache(CONFIG.BANNER_SUBTITLE_URL, CONFIG.BANNER_SUBTITLE_CACHE_KEY);
+          const subtitleLines = subtitle.trim().split("\n").filter(line => line.trim() !== "");
+          if (subtitleLines.length > 0) {
+            RadarService.updateRadarDisplay(
+              "Koramil 1609-05/Sukasada",
+              subtitleLines[0],
+              `Hanpangan hari ini : ${hanpanganData.current}`
+            );
+          }
+        } catch (error) {
+          console.error("Error updating after coming online:", error);
+        }
+      } else {
+        NotificationService.showToast("Internet terputus! Mode offline aktif");
+        RadarService.updateRadarDisplay(
+          "Koramil 1609-05/Sukasada",
+          "Mode Offline",
+          "Hanpangan : (Tidak dapat memperbarui)"
+        );
+      }
+    }
+
+    // ======================== INITIALIZATION ========================
+    async function initializeApp() {
+      // Initialize state
+      AppState.init();
+      
+      // Set up event listeners
+      window.addEventListener('online', handleOnlineStatusChange);
+      window.addEventListener('offline', handleOnlineStatusChange);
+      
+      // Add click glow effect to all buttons
+      document.querySelectorAll('.btn, .tab-button').forEach(button => {
+        button.addEventListener('click', createClickGlow);
+      });
+      
+      document.addEventListener("visibilitychange", async () => {
+        if (!document.hidden) {
+          try {
+            const hanpanganData = await HanpanganService.getCurrentHanpangan();
+            RadarService.updateHanpanganDisplay(hanpanganData.current);
+            const subtitle = await NetworkService.fetchWithCache(CONFIG.BANNER_SUBTITLE_URL, CONFIG.BANNER_SUBTITLE_CACHE_KEY);
+            const subtitleLines = subtitle.trim().split("\n").filter(line => line.trim() !== "");
+            if (subtitleLines.length > 0) {
+              RadarService.updateRadarDisplay(
+                "Koramil 1609-05/Sukasada",
+                subtitleLines[0],
+                `Hanpangan Hari Ini : ${hanpanganData.current}`
+              );
+            }
+          } catch (error) {
+            console.error("Error updating on visibility change:", error);
+          }
+        }
+      });
+
+      // Initial radar display
+      RadarService.updateRadarDisplay(
+        "Koramil 1609-05/Sukasada",
+        "Memuat data...",
+        "Hanpangan : Loading..."
+      );
+
+      // Load initial data
+      try {
+        await ScheduleService.loadDaftarNama();
+        ["nama1a", "nama1b", "nama2a", "nama2b", "nama3a", "nama3b", "nama4a", "nama4b"].forEach(
+          id => ScheduleService.populateDropdown(id)
+        );
+        
+        const hanpanganData = await HanpanganService.getCurrentHanpangan();
+        RadarService.updateHanpanganDisplay(hanpanganData.current);
+        
+        const subtitle = await NetworkService.fetchWithCache(CONFIG.BANNER_SUBTITLE_URL, CONFIG.BANNER_SUBTITLE_CACHE_KEY);
+        const subtitleLines = subtitle.trim().split("\n").filter(line => line.trim() !== "");
+        if (subtitleLines.length > 0) {
+          RadarService.updateRadarDisplay(
+            "Koramil 1609-05/Sukasada",
+            subtitleLines[0],
+            `Hanpangan hari ini : ${hanpanganData.current}`
+          );
+        }
+        
+        await CalendarService.loadData()
+          .then(data => CalendarService.render(data))
+          .catch(error => console.error("Error loading calendar:", error));
+        
+        ScheduleService.updatePreview();
+        
+        // Set up auto-refresh
+        setInterval(async () => {
+          try {
+            const hanpanganData = await HanpanganService.getCurrentHanpangan();
+            RadarService.updateHanpanganDisplay(hanpanganData.current);
+            const subtitle = await NetworkService.fetchWithCache(CONFIG.BANNER_SUBTITLE_URL, CONFIG.BANNER_SUBTITLE_CACHE_KEY);
+            const subtitleLines = subtitle.trim().split("\n").filter(line => line.trim() !== "");
+            if (subtitleLines.length > 0) {
+              RadarService.updateRadarDisplay(
+                "Koramil 1609-05/Sukasada",
+                subtitleLines[0],
+                `Hanpangan hari ini : ${hanpanganData.current}`
+              );
+            }
+          } catch (error) {
+            console.error("Error in auto-refresh:", error);
+          }
+        }, CONFIG.CACHE_TIMEOUT);
+        
+        // Welcome message
+        const welcomeMessage = new SpeechSynthesisUtterance("Jadwal Koramil Sukasada");
+        welcomeMessage.lang = "id-ID";
+        welcomeMessage.rate = 0.9;
+        speechSynthesis.speak(welcomeMessage);
+        
+      } catch (error) {
+        console.error("Initialization error:", error);
+        NotificationService.showToast("Gagal memuat data awal");
+      }
+    }
+
+    // ======================== GLOBAL FUNCTIONS ========================
+    function openTab(tabId) {
+      handleTabChange(tabId);
+    }
+
+    function shareToWhatsApp() {
+      SharingService.shareToWhatsApp();
+    }
+
+    function updatePreview() {
+      ScheduleService.updatePreview();
+    }
+
+    // Start the application
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', initializeApp);
+    } else {
+      initializeApp();
+    }
+  </script>
+</body>
+</html>
