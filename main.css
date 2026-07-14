@@ -1,0 +1,247 @@
+/* ============================================================
+   MAIN.CSS - ROOT VARIABLES & BASE STYLING
+   Gaya Klasik Jadul dengan Sentuhan Modern
+   ============================================================ */
+
+/* ============================================================
+   ROOT VARIABLES
+   ============================================================ */
+:root {
+    /* Font System */
+    --sys-font: 'Times New Roman', 'Georgia', 'Palatino Linotype', 'Book Antiqua', serif;
+    --sys-font-modern: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+
+    /* Warna Klasik - Tua & Elegan */
+    --bg-dark: #0a0f0a;
+    --bg-card: #1a1f1a;
+    --bg-card-alt: #0d150d;
+    --bg-input: #0f1a0f;
+    
+    /* Warna Emas Klasik */
+    --gold: #c9a84c;
+    --gold-light: #e8d5a3;
+    --gold-dark: #a68a3a;
+    --gold-dim: rgba(201, 168, 76, 0.12);
+    --gold-glow: rgba(201, 168, 76, 0.08);
+    
+    /* Warna Hijau Tua Militer */
+    --green-army: #2d3d2d;
+    --green-light: #4a6a4a;
+    --green-dark: #1a2a1a;
+    --green-muted: #3a5a3a;
+    
+    /* Warna Teks */
+    --text-primary: #ece8d5;
+    --text-secondary: #b8b0a0;
+    --text-muted: #7a8a7a;
+    --text-gold: #e8d5a3;
+    
+    /* Border & Shadow */
+    --border-gold: rgba(201, 168, 76, 0.15);
+    --shadow-card: 0 8px 32px rgba(0, 0, 0, 0.7);
+    --shadow-glow: 0 0 40px rgba(201, 168, 76, 0.04);
+    
+    /* Border Radius */
+    --radius-sm: 6px;
+    --radius-md: 12px;
+    --radius-lg: 18px;
+    --radius-xl: 24px;
+    
+    /* Transisi */
+    --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-slow: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* ============================================================
+   RESET & BASE
+   ============================================================ */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    font-family: var(--sys-font);
+    background: var(--bg-dark);
+    color: var(--text-primary);
+    min-height: 100vh;
+    padding: 20px 16px;
+    background-image: 
+        radial-gradient(ellipse at 20% 30%, rgba(45, 61, 45, 0.15) 0%, transparent 60%),
+        radial-gradient(ellipse at 80% 70%, rgba(45, 61, 45, 0.10) 0%, transparent 50%),
+        repeating-linear-gradient(0deg, transparent, transparent 100px, rgba(201, 168, 76, 0.008) 100px, rgba(201, 168, 76, 0.008) 101px);
+    background-attachment: fixed;
+}
+
+/* ============================================================
+   CONTAINER UTAMA - GAYA KUNO DENGAN BORDER EMAS
+   ============================================================ */
+.container {
+    max-width: 860px;
+    margin: 0 auto;
+    padding: 24px 28px 36px;
+    background: var(--bg-card);
+    border-radius: var(--radius-lg);
+    border: 1px solid var(--border-gold);
+    box-shadow: var(--shadow-card), var(--shadow-glow);
+    backdrop-filter: blur(12px);
+    position: relative;
+}
+
+/* Dekorasi sudut klasik */
+.container::before {
+    content: '✦';
+    position: absolute;
+    top: -8px;
+    left: 20px;
+    color: var(--gold);
+    font-size: 14px;
+    opacity: 0.3;
+}
+
+.container::after {
+    content: '✦';
+    position: absolute;
+    bottom: -8px;
+    right: 20px;
+    color: var(--gold);
+    font-size: 14px;
+    opacity: 0.3;
+}
+
+/* ============================================================
+   GAYA KLASIK - ORNAMEN
+   ============================================================ */
+.ornament-divider {
+    text-align: center;
+    color: var(--gold-dark);
+    font-size: 12px;
+    letter-spacing: 8px;
+    opacity: 0.3;
+    margin: 12px 0;
+    font-family: var(--sys-font);
+}
+
+.ornament-divider::before {
+    content: '✦ ✦ ✦ ✦ ✦';
+}
+
+/* ============================================================
+   TYPOGRAPHY KLASIK
+   ============================================================ */
+h1, h2, h3, h4, h5, h6 {
+    font-family: var(--sys-font);
+    font-weight: 700;
+    letter-spacing: 0.5px;
+}
+
+h1 {
+    font-size: 28px;
+    text-transform: uppercase;
+    color: var(--gold-light);
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.8);
+}
+
+h2 {
+    font-size: 22px;
+    color: var(--text-primary);
+}
+
+h3 {
+    font-size: 16px;
+    color: var(--text-gold);
+}
+
+/* ============================================================
+   SCROLLBAR KLASIK
+   ============================================================ */
+::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+}
+
+::-webkit-scrollbar-track {
+    background: var(--bg-dark);
+    border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--gold-dark);
+    border-radius: 10px;
+    border: 1px solid var(--gold-dim);
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: var(--gold);
+}
+
+/* ============================================================
+   SELECTION
+   ============================================================ */
+::selection {
+    background: var(--gold-dark);
+    color: var(--bg-dark);
+}
+
+::-moz-selection {
+    background: var(--gold-dark);
+    color: var(--bg-dark);
+}
+
+/* ============================================================
+   UTILITY KLASIK
+   ============================================================ */
+.text-gold { color: var(--gold-light); }
+.text-muted { color: var(--text-muted); }
+.text-center { text-align: center; }
+.text-uppercase { text-transform: uppercase; }
+.font-serif { font-family: var(--sys-font); }
+
+.mt-8 { margin-top: 8px; }
+.mt-12 { margin-top: 12px; }
+.mt-16 { margin-top: 16px; }
+.mb-8 { margin-bottom: 8px; }
+.mb-12 { margin-bottom: 12px; }
+.mb-16 { margin-bottom: 16px; }
+
+/* ============================================================
+   ANIMASI KLASIK
+   ============================================================ */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(12px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes goldPulse {
+    0%, 100% { opacity: 0.6; }
+    50% { opacity: 1; }
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+.fade-in {
+    animation: fadeIn 0.6s ease forwards;
+}
+
+/* ============================================================
+   RESPONSIVE BASE
+   ============================================================ */
+@media (max-width: 480px) {
+    body { padding: 10px 8px; }
+    .container { padding: 16px 14px 24px; }
+    h1 { font-size: 20px; }
+    h2 { font-size: 17px; }
+    h3 { font-size: 13px; }
+}
+
+@media (min-width: 481px) and (max-width: 768px) {
+    .container { padding: 20px 22px 28px; }
+}
