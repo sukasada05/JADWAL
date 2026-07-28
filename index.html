@@ -1,199 +1,287 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="robots" content="noindex, nofollow">
-    <meta name="mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="apple-mobile-web-app-title" content="DUKOPS">
-    <title>SISTEM PELAPORAN DUKOPS BABINSA</title>
-    <meta name="theme-color" content="#0a1a3a">
-    
-    <base href="/dukops4/">
-
-    <link rel="icon" type="image/x-icon" href="icons/favicon.ico" />
-    <link rel="icon" type="image/png" href="icons/favicon-96x96.png" sizes="96x96" />
-    <link rel="apple-touch-icon" href="icons/apple-touch-icon.png" />
-    <link rel="manifest" href="site.webmanifest" />
-
-    <!-- Library eksternal untuk kompatibilitas -->
-    <script src="https://cdn.polyfill.io/v3/polyfill.min.js?features=default,es6,Promise,fetch,Array.prototype.includes"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
-
-    <link rel="stylesheet" href="css/main.css">
-
-    <style>
-        /* Windows 98 Style - Tanpa Flexbox/Grid */
-        .indicator-tooltip { display: none !important; }
-        .supabase-indicator { cursor: default; }
-    </style>
-
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>DUKOPS BABINSA</title>
+<base href="/jadul/">
+<link rel="manifest" href="site.webmanifest">
+<link rel="icon" href="icons/favicon.ico">
+<link rel="icon" type="image/png" href="icons/favicon-96x96.png" sizes="96x96">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{width:100%;height:100%;overflow:hidden;font-family:'MS Sans Serif','Segoe UI',Tahoma,sans-serif;background:#008080;color:#000;font-size:12px}
+#splash{position:fixed;top:0;left:0;right:0;bottom:0;background:#008080;z-index:99999;display:flex;align-items:center;justify-content:center}
+.splash-box{background:#c0c0c0;border:4px solid #fff #808080 #808080 #fff;padding:20px 30px 25px;text-align:center;min-width:320px;max-width:420px;box-shadow:4px 4px 20px rgba(0,0,0,.5)}
+.splash-box .logo{font-size:40px;color:#000080;font-weight:bold;letter-spacing:3px;background:#c0c0c0;padding:4px 12px;border:2px solid #fff #808080 #808080 #fff;display:inline-block}
+.splash-box .ver{font-size:11px;color:#444;margin:4px 0 8px}
+.splash-box .title{font-size:16px;font-weight:bold;color:#000080}
+.splash-box .sub{font-size:12px;color:#444}
+.splash-box .divider{border:1px solid #808080;margin:8px 0 10px}
+.splash-box .pbar{width:100%;height:22px;background:#fff;border:2px solid #808080 #fff #fff #808080;margin:3px 0;position:relative}
+.splash-box .pfill{height:100%;background:linear-gradient(90deg,#000080,#1084d0);width:0;transition:width .3s}
+.splash-box .ptxt{position:absolute;top:0;left:0;right:0;bottom:0;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:bold}
+.splash-box .army{margin-top:8px}
+.splash-box .army img{max-width:120px;width:100%}
+.splash-box .foot{font-size:9px;color:#888;border-top:1px solid #a0a0a0;padding-top:6px;margin-top:8px}
+#app{display:none;width:100%;height:100vh;background:#008080;padding:6px;position:fixed;top:0;left:0}
+.win{background:#c0c0c0;border:3px solid #fff #808080 #808080 #fff;padding:8px;width:100%;height:100%;display:flex;flex-direction:column;overflow:hidden}
+.titlebar{background:linear-gradient(90deg,#000080,#1084d0);color:#fff;padding:4px 8px;font-weight:bold;font-size:13px;display:flex;justify-content:space-between;align-items:center;margin:-8px -8px 6px;flex-shrink:0}
+.titlebar .ctrl button{background:#c0c0c0;border:2px solid #fff #808080 #808080 #fff;color:#000;font-weight:bold;padding:0 6px;cursor:pointer;font-size:12px;min-width:20px;height:20px;font-family:inherit}
+.titlebar .ctrl button:active{border-color:#808080 #fff #fff #808080}
+.titlebar .ctrl .cl:active{background:#800000;color:#fff}
+.header{background:linear-gradient(180deg,#0a1a3a,#1a2a5a);padding:6px 12px;margin:-6px -8px 6px;color:#fff;flex-shrink:0;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:6px}
+.header .left .t{font-weight:bold;font-size:15px;color:#ffcc00}
+.header .left .a{font-size:10px;color:#88aacc}
+.header .right{text-align:right}
+.cval{background:#000080;color:#ffcc00;padding:0 10px;border:2px solid #4040a0 #000040 #000040 #4040a0;font-weight:bold;font-size:16px;display:inline-block;min-width:30px;text-align:center}
+.clbl{font-size:10px;color:#88aacc;display:block}
+.tabs{display:flex;gap:2px;margin-bottom:6px;border-bottom:2px solid #808080;padding-bottom:2px;flex-shrink:0}
+.tabs button{background:#c0c0c0;border:2px solid #fff #808080 #808080 #fff;padding:3px 14px;font-weight:bold;cursor:pointer;font-size:12px;font-family:inherit}
+.tabs button.act{background:#000080;color:#fff;border-color:#4040a0 #000040 #000040 #4040a0}
+.tabs button:active{border-color:#808080 #fff #fff #808080}
+.tabs button.act:active{border-color:#000040 #4040a0 #4040a0 #000040}
+.hide{display:none!important}
+.tabcon{flex:1;overflow-y:auto;padding-right:4px;min-height:0}
+.tabcon::-webkit-scrollbar{width:12px}
+.tabcon::-webkit-scrollbar-track{background:#c0c0c0;border:1px solid #808080}
+.tabcon::-webkit-scrollbar-thumb{background:#c0c0c0;border:2px solid #fff #808080 #808080 #fff}
+.tabcon::-webkit-scrollbar-button{background:#c0c0c0;border:1px solid #808080;height:14px}
+.lbl{font-weight:bold;display:block;margin:6px 0 2px;font-size:12px}
+.inp,.sel,.txt{border:2px solid #808080 #fff #fff #808080;padding:2px 6px;width:100%;background:#fff;font-family:inherit;font-size:12px}
+.inp:focus,.sel:focus,.txt:focus{border-color:#000080 #fff #fff #000080;outline:none}
+.txt{resize:vertical;min-height:60px}
+.prev{background:#fff;border:2px solid #808080 #fff #fff #808080;padding:4px 8px;margin:2px 0 6px;min-height:26px;font-size:12px;word-wrap:break-word}
+.btn{background:#c0c0c0;border:2px solid #fff #808080 #808080 #fff;padding:4px 14px;font-weight:bold;cursor:pointer;font-size:12px;font-family:inherit}
+.btn:active{border-color:#808080 #fff #fff #808080}
+.btn:disabled{opacity:.5;cursor:default}
+.btn-p{background:#000080;color:#fff;border-color:#4040a0 #000040 #000040 #4040a0}
+.btn-p:active{border-color:#000040 #4040a0 #4040a0 #000040}
+.btn-s{background:#006400;color:#fff;border-color:#40a040 #004000 #004000 #40a040}
+.btn-s:active{border-color:#004000 #40a040 #40a040 #004000}
+.btn-d{background:#8B0000;color:#fff;border-color:#cc4040 #4a0000 #4a0000 #cc4040}
+.btn-d:active{border-color:#4a0000 #cc4040 #cc4040 #4a0000}
+.acts{display:flex;gap:4px;flex-wrap:wrap;margin:6px 0}
+.acts button{flex:1;min-width:80px;padding:4px 10px;font-weight:bold;cursor:pointer;font-size:11px;font-family:inherit}
+#canvas{width:100%;border:2px solid #808080;margin:4px 0;background:#000;display:block}
+.status{background:#c0c0c0;border-top:2px solid #808080;padding:2px 10px;font-size:10px;margin:4px -8px -8px;display:flex;justify-content:space-between;flex-shrink:0}
+#attPanel{border:2px solid #808080;padding:8px;margin-top:6px;background:#c0c0c0}
+.attHead{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px}
+.attHead span{font-weight:bold}
+.attFilt{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:6px;align-items:center}
+.absenCard{background:#c0c0c0;border:2px solid #fff #808080 #808080 #fff;padding:8px;margin-bottom:8px}
+.absenRow{display:flex;gap:8px;margin-bottom:8px;flex-wrap:wrap}
+.absenRow .fg{flex:1;min-width:120px}
+.absenRow label{font-size:10px;font-weight:bold;display:block}
+.absenGrid{display:grid;grid-template-columns:repeat(4,1fr);gap:3px;margin:4px 0}
+.absenStat{background:#fff;border:2px solid #808080 #fff #fff #808080;padding:4px;text-align:center}
+.absenStat .v{font-size:18px;font-weight:bold}
+.absenStat .lbl{font-size:8px;color:#666}
+.absenItem{background:#fff;border:1px solid #a0a0a0;padding:3px 6px;margin-bottom:2px;display:flex;justify-content:space-between;align-items:center;font-size:11px}
+.absenItem .nm{font-weight:500;flex:1}
+.absenItem .st{font-weight:bold;margin:0 8px}
+.badge{padding:0 5px;font-size:8px;font-weight:bold;border-radius:2px}
+.badge-lengkap{background:#e8f5e9;color:#4caf50}
+.badge-bl{background:#fff3e0;color:#ff9800}
+.badge-belum{background:#ffebee;color:#f44336}
+.pbar2{width:100%;height:8px;background:#e0e0e0;border:1px solid #a0a0a0}
+.pfill2{height:100%;background:#4CAF50;transition:width .3s}
+.btn-absen{background:#006400;color:#fff;border:2px solid #40a040 #004000 #004000 #40a040;padding:4px 16px;font-weight:bold;cursor:pointer;font-size:11px;width:100%;font-family:inherit}
+.btn-absen:active{border-color:#004000 #40a040 #40a040 #004000}
+#tabHanpangan{padding:0;height:100%}
+#tabHanpangan iframe{width:100%;height:100%;min-height:400px;border:2px solid #808080 #fff #fff #808080;background:#fff;display:block}
+.toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:#c0c0c0;border:3px solid #fff #808080 #808080 #fff;padding:8px 20px;font-weight:bold;z-index:9999;font-size:12px;max-width:90%;text-align:center;display:none;font-family:inherit}
+.toast.show{display:block}
+.toast.suc{border-color:#40a040 #004000 #004000 #40a040;background:#e8f5e9}
+.toast.err{border-color:#cc4040 #4a0000 #4a0000 #cc4040;background:#ffebee}
+.toast.warn{border-color:#ff9800 #b26500 #b26500 #ff9800;background:#fff3e0}
+.foot2{text-align:center;font-size:9px;color:#666;margin-top:6px;padding:4px}
+@media(max-width:600px){.tabs button{font-size:10px;padding:2px 8px}.absenGrid{grid-template-columns:repeat(2,1fr)}.absenRow{flex-direction:column;gap:4px}.splash-box{padding:15px 20px;min-width:auto;margin:10px}.acts button{min-width:50px;font-size:9px;padding:3px 6px}.header .left .t{font-size:13px}.header .left .a{font-size:9px}.header{padding:4px 8px}#tabHanpangan iframe{min-height:250px}.titlebar{font-size:11px;padding:3px 6px}.cval{font-size:14px;min-width:24px}}
+@media(max-width:400px){.tabs button{font-size:8px;padding:2px 5px}.titlebar{font-size:10px}.splash-box .logo{font-size:28px}.splash-box .title{font-size:13px}.header .left .t{font-size:11px}}
+</style>
 </head>
 <body>
 
-    <!-- ====== INDIKATOR SUPABASE ====== -->
-    <div id="supabaseIndicator" class="supabase-indicator indicator-checking">
-        <div class="indicator-dot"></div>
-        <span class="indicator-tooltip"></span>
-    </div>
+<!-- SPLASH -->
+<div id="splash"><div class="splash-box"><div class="logo">DUKOPS</div><div class="ver">Windows 98</div><div class="title">BABINSA SUKASADA</div><div class="sub">KORAMIL 1609-05/SUKASADA</div><div class="sub" style="font-size:11px;color:#666">KODIM 1609/BULELENG</div><div class="divider"></div><div style="font-size:11px;color:#444;text-align:left">⏳ Loading...</div><div class="pbar"><div class="pfill" id="sp"></div><div class="ptxt" id="sptxt">0%</div></div><div class="army"><img src="army.gif" alt="army"></div><div class="foot">© 2026 DUKOPS - Mangsatria</div></div></div>
 
-    <!-- ====== SPLASH SCREEN ====== -->
-    <div id="splashScreen" class="splash-container">
-        <div class="splash-content">
-            <div class="splash-logo-center">
-                <img src="icons/favicon-96x96.png" alt="Lambang Kodam Udayana">
-            </div>
-            <div class="splash-title-center">DUKOPS</div>
-            <div class="splash-title-center">BABINSA SUKASADA</div>
-            <div class="splash-divider-center"></div>
-            <div class="splash-subtitle-center">KODIM 1609/BULELENG</div>
-            <div class="splash-unit-center">KORAMIL 1609-05/SUKASADA</div>
-            <div class="splash-kodim-center">Sistem Pelaporan Digitalisasi Babinsa</div>
-            <div class="splash-progress-center">
-                <div class="splash-progress-bar-center" id="splashProgressBar"></div>
-            </div>
-            <div class="splash-percentage-center" id="progressPercentage">20%</div>
-            <div class="splash-army">
-                <img id="splashArmyGif" src="army.gif" alt="army" style="max-width:240px; width:100%; height:auto; display:block; margin:0 auto;">
-            </div>
-        </div>
-    </div>
+<!-- APP -->
+<div id="app"><div class="win">
+<div class="titlebar"><span>📁 DUKOPS BABINSA SUKASADA</span><span class="ctrl"><button onclick="alert('Minimize')">_</button><button onclick="alert('Maximize')">□</button><button class="cl" onclick="location.reload()">✕</button></span></div>
+<div class="header"><div class="left"><div class="t">📊 DASHBOARD DUKOPS</div><div class="a">KORAMIL 1609-05/SUKASADA - Jl. Jelantik Gingsir No. 32</div></div><div class="right"><span class="cval" id="cnt">0</span><span class="clbl">Laporan Terkirim</span></div></div>
+<div class="tabs"><button class="act" onclick="showTab('dukops',this)">📋 DUKOPS</button><button onclick="showTab('absen',this)">📊 ABSEN</button><button onclick="showTab('hanpangan',this)">🎯 PIKET</button></div>
 
-    <!-- ====== APP CONTAINER ====== -->
-    <div id="appContainer" class="container" style="display: none;">
+<!-- TAB DUKOPS -->
+<div id="tabDukops" class="tabcon">
+<label class="lbl">🏘️ Pilih Desa:</label>
+<select class="sel" id="desa" onchange="loadDesa()"><option value="">-- Pilih Desa --</option></select>
+<div class="prev" id="pDesa">Pilih desa untuk melihat detail</div>
+<label class="lbl">📍 Koordinat:</label>
+<div class="prev" id="pKoordinat">Pilih desa terlebih dahulu</div>
+<label class="lbl">📷 Foto:</label>
+<input type="file" class="inp" id="gambar" accept="image/*" onchange="previewImage()">
+<div class="prev" id="pGambar">Belum ada foto</div>
+<label class="lbl">📅 Tanggal & Waktu:</label>
+<input type="datetime-local" class="inp" id="tgl" onchange="updatePreview()">
+<div class="prev" id="pTgl">Pilih tanggal & waktu</div>
+<label class="lbl">📝 Narasi:</label>
+<textarea class="txt" id="narasi" rows="3" placeholder="Masukkan narasi..." oninput="checkInput()"></textarea>
+<canvas id="canvas"></canvas>
+<div class="acts"><button class="btn btn-s" id="submitBtn" onclick="submitLaporan()" disabled>📤 KIRIM & DOWNLOAD</button><button class="btn btn-d" onclick="resetAll()">🔄 RESET</button><button class="btn btn-p" id="attBtn" onclick="showAttendance()" disabled>📊 LAPORAN</button></div>
+<div id="attPanel" style="display:none"><div class="attHead"><span>📊 LAPORAN ABSENSI</span><button class="btn" onclick="hideAttendance()">✕ TUTUP</button></div><div class="attFilt"><span style="font-size:11px">Desa: <strong id="attDesa">-</strong></span><input type="month" class="inp" id="attMonth" style="width:auto;flex:1;min-width:130px" onchange="loadAttendance()"></div><div id="attLoad" style="display:none;text-align:center;padding:8px">⏳ Memuat...</div><div id="attSum" style="display:none;background:#fff;padding:8px;border:2px solid #808080;margin-bottom:6px"><div style="display:flex;justify-content:space-between;font-size:11px;flex-wrap:wrap"><span>Total: <strong id="totRpt">0</strong></span><span>Desa: <strong id="totDesa">0</strong></span><span>Target: <strong id="targetStat">0%</strong></span></div></div><div id="attList" style="max-height:200px;overflow-y:auto"></div></div>
+</div>
 
-        <!-- Install Button -->
-        <button id="installButton" style="display:none;">
-            <i class="fas fa-download"></i> Install App
-        </button>
+<!-- TAB ABSEN -->
+<div id="tabAbsen" class="tabcon hide">
+<div class="absenCard"><div class="absenRow"><div class="fg"><label>📅 TAHUN</label><select class="sel" id="absenTahun" onchange="loadBulan()"><option>Memuat...</option></select></div><div class="fg"><label>📆 BULAN</label><select class="sel" id="absenBulan" disabled><option>Pilih tahun</option></select></div></div><button class="btn-absen" onclick="downloadAbsenPNG()">📥 DOWNLOAD ABSEN PNG</button></div>
+<div id="absenResult"></div>
+<div class="foot2">✨ Mangsatria@2026</div>
+</div>
 
-        <!-- ===== HEADER ===== -->
-        <div class="dukops-header">
-            <div class="dukops-header-row">
-                <div class="dukops-profile-area" id="desaProfileContainerHeader">
-                    <img id="desaProfileImgHeader" class="dukops-profile-img" src="icons/favicon-96x96.png" alt="">
-                    <div id="desaProfileNameHeader" class="dukops-profile-name" style="display:none;"></div>
-                </div>
-                <div class="dukops-title-area">
-                    <div class="dukops-header-title">KORAMIL 1609-05/SUKASADA</div>
-                    <div class="dukops-header-address">
-                        <i class="fas fa-map-marker-alt"></i> Jl. Jelantik Gingsir No. 32 Sukasada Singaraja-Bali 81161
-                    </div>
-                    <div><span class="counter-value" id="submissionCounter" data-count="0">0</span></div>
-                </div>
-            </div>
-        </div>
+<!-- TAB PIKET -->
+<div id="tabHanpangan" class="tabcon hide"><iframe src="https://sukasada05.github.io/Hanpangan/" title="PIKET"></iframe></div>
 
-        <!-- ===== NAVIGASI ===== -->
-        <div class="nav-buttons">
-            <button class="nav-btn nav-btn-dukops active" id="btnDukops" onclick="showDukops()">DUKOPS</button>
-            <button class="nav-btn nav-btn-absen" id="btnAbsen" onclick="showAbsenTab()">ABSEN</button>
-            <button class="nav-btn nav-btn-hanpangan" id="btnHanpangan" onclick="showHanpangan()">PIKET</button>
-        </div>
+<div class="status"><span id="statusBar">📌 Status: Siap</span><span>🖥️ DUKOPS v3.0 | Win98</span></div>
+</div></div>
 
-        <!-- ===== CONTENT DUKOPS ===== -->
-        <div id="dukopsContent">
-            <div style="width:100%; margin:0 auto;">
+<div class="toast" id="toast"></div>
 
-                <label id="labelPilihDesa"><i class="fas fa-city"></i> Pilih Desa/Kelurahan:</label>
-                <select id="selectDesa" onchange="loadSelectedDesa()">
-                    <option value="">--Pilih desa/Kelurahan--</option>
-                </select>
-                <div id="loadingDesa" style="display:none;"><i class="fas fa-spinner fa-spin"></i> Memuat...</div>
-                <div class="previewBox" id="previewDesa" style="display:none;"></div>
+<script>
+// ============================================================
+// DUKOPS - WINDOWS 98 - FULL FUNCTIONAL
+// SEMUA SKRIP DALAM SATU FILE - SUPER PENDEEEEKKK!!!
+// ============================================================
 
-                <label id="labelKoordinat" style="display:none;"><i class="fas fa-map-pin"></i> Koordinat:</label>
-                <div id="loadingKoordinat" style="display:none;"><i class="fas fa-spinner fa-spin"></i> Memuat koordinat...</div>
-                <div class="previewBox" id="previewKordinat"><span style="color:#6a7a8a;">Pilih desa/Kelurahan untuk melihat koordinat</span></div>
+// KONFIG
+var GS="https://script.google.com/macros/s/AKfycbz3sB1d0PRRzlvAJwdr8nl5dQa6qpyfHQCJbYxBMz0Jpj2o-i1_WnwMzJEy3Z4GA9uh/exec";
+var TARGET=9;
+var desa="", koordList=[], koordNow="", img=new Image(), tgl="", cnt=0, dates=[], dc={};
 
-                <label id="labelFotoKegiatan"><i class="fas fa-camera"></i> Foto Kegiatan:</label>
-                <input type="file" id="gambar" accept="image/*" onchange="previewImage()">
-                <div class="previewBox" id="previewGambar"></div>
+// ============================================================
+// SPLASH
+// ============================================================
+document.addEventListener('DOMContentLoaded',function(){
+var p=0,bar=document.getElementById('sp'),txt=document.getElementById('sptxt'),sp=document.getElementById('splash'),app=document.getElementById('app');
+function up(v){p=Math.min(v,100);bar.style.width=p+'%';txt.textContent=p+'%';if(p>=100){setTimeout(function(){sp.style.display='none';app.style.display='block';init();},400);}}
+var stg=[15,30,45,60,75,90,100],i=0;
+function next(){if(i<stg.length){up(stg[i]);i++;setTimeout(next,200);}}
+setTimeout(next,100);
+});
 
-                <label id="labelTanggalWaktu"><i class="fas fa-calendar-alt"></i> Tanggal & Waktu: <span id="tanggalWaktuLabelText">Pilih tanggal & waktu</span></label>
-                <input type="datetime-local" id="tanggalWaktu" onchange="updateDatePreview()">
+// ============================================================
+// INIT
+// ============================================================
+function init(){console.log('🚀 DUKOPS Win98');loadDesaList();loadCounter();loadDates();loadDC();resetCanvas();updatePreview();checkInput();setDate();setTimeout(function(){if(typeof loadAbsen==='function')loadAbsen();},500);notif('✅ DUKOPS siap!','suc');document.getElementById('statusBar').textContent='📌 Status: Siap';}
 
-                <label><i class="fas fa-file-alt"></i> Narasi Kegiatan:</label>
-                <div class="narasi-wrapper">
-                    <textarea id="narasi" class="auto-height-textarea" rows="6" placeholder="Masukkan narasi kegiatan...&#9997;" oninput="checkInputCompletion(); autoResizeNarasi()"></textarea>
-                </div>
+function setDate(){var n=new Date();var d=n.getFullYear()+'-'+String(n.getMonth()+1).padStart(2,'0')+'-'+String(n.getDate()).padStart(2,'0')+'T'+String(n.getHours()).padStart(2,'0')+':'+String(n.getMinutes()).padStart(2,'0');document.getElementById('tgl').value=d;updatePreview();}
 
-                <canvas id="canvas"></canvas>
+// ============================================================
+// TAB
+// ============================================================
+function showTab(t,b){var tabs=['dukops','absen','hanpangan'];var btns=document.querySelectorAll('.tabs button');for(var i=0;i<btns.length;i++)btns[i].classList.remove('act');if(b)b.classList.add('act');for(var t2=0;t2<tabs.length;t2++){var el=document.getElementById('tab'+tabs[t2].charAt(0).toUpperCase()+tabs[t2].slice(1));if(el){if(tabs[t2]===t)el.classList.remove('hide');else el.classList.add('hide');}}if(t==='absen'&&typeof loadAbsen==='function')loadAbsen();if(t==='hanpangan'){var ifr=document.querySelector('#tabHanpangan iframe');if(ifr)ifr.src=ifr.src;}}
 
-                <div class="action-buttons">
-                    <button id="submitBtn" onclick="processSubmission()" disabled>
-                        <i class="fas fa-download"></i> KIRIM dan DOWNLOAD
-                    </button>
-                    <button id="resetBtn" onclick="resetAll()"><i class="fas fa-redo"></i> RESET</button>
-                    <button id="showAttendanceBtn" onclick="showAttendance()" class="btn-attendance btn-compact" title="Laporan Absensi" disabled>
-                        <i class="fas fa-chart-bar"></i> LAPORAN
-                    </button>
-                </div>
+// ============================================================
+// XHR
+// ============================================================
+function xhrGet(u,c){var x=new XMLHttpRequest();x.open('GET',u,true);x.onreadystatechange=function(){if(x.readyState===4){if(x.status===200){try{var d=JSON.parse(x.responseText);c(null,d);}catch(e){c(e,null);}}else{c(new Error('HTTP '+x.status),null);}}};x.onerror=function(){c(new Error('Network'),null);};x.send();}
+function xhrPost(u,f,c){var x=new XMLHttpRequest();x.open('POST',u,true);x.onreadystatechange=function(){if(x.readyState===4){if(x.status===200){try{var d=JSON.parse(x.responseText);c(null,d);}catch(e){c(e,null);}}else{c(new Error('HTTP '+x.status),null);}}};x.onerror=function(){c(new Error('Network'),null);};x.send(f);}
 
-                <div id="attendancePanel" style="display: none;">
-                    <div class="attendance-header">
-                        <button onclick="hideAttendance()" class="btn-close-3d btn-compact">TUTUP</button>
-                    </div>
-                    <div class="attendance-filters">
-                        <span class="attendance-selected-desa" id="attendanceSelectedDesa">
-                            Desa dipilih: <span id="attendanceSelectedDesaName">Silahkan Pilih Desa</span>
-                        </span>
-                        <div class="month-picker-area" id="attendanceMonthPicker" tabindex="0" role="button">
-                            <input type="month" id="attendanceMonthFilter" onchange="loadAttendanceData()">
-                        </div>
-                    </div>
-                    <div id="attendanceLoading" style="display: none; text-align: center; padding: 20px;">
-                        <i class="fas fa-spinner fa-spin"></i> &#128094; Tunggu..laporan akan di tampilkan
-                    </div>
-                    <div id="attendanceSummary" class="attendance-summary" style="display: none;">
-                        <div class="summary-row"><span>Total Laporan:</span><span id="totalReports">0</span></div>
-                        <div class="summary-row"><span>Total Desa:</span><span id="totalDesa">0</span></div>
-                        <div class="summary-row"><span>Pencapaian Target:</span><span id="targetStatus">0%</span></div>
-                    </div>
-                    <div id="attendanceList" style="max-height: 400px; overflow-y: auto;"></div>
-                </div>
+function sendToBackend(a,d,c){if(!c)c=function(){};var u=GS+'?action='+a;if(a==='listFiles'||a==='getConfig'||a==='test'||a==='telegramTest'){if(d&&d.desaFilter)u+='&desaFilter='+encodeURIComponent(d.desaFilter);if(d&&d.monthFilter)u+='&monthFilter='+encodeURIComponent(d.monthFilter);if(d&&d.readZips)u+='&readZips=true';xhrGet(u,function(e,r){if(e)c({success:false,error:e.message});else c(r);});return;}var fd=new FormData();fd.append('action',a);if(d){for(var k in d){if(d.hasOwnProperty(k)&&d[k]!==undefined&&d[k]!==null){if(k==='fileData'&&typeof d[k]==='string')fd.append(k,d[k]);else fd.append(k,String(d[k]));}}}xhrPost(GS,fd,function(e,r){if(e)c({success:false,error:e.message});else c(r);});}
 
-            </div>
-        </div>
+function uploadDrive(blob,fn,dn,dt,c){if(!c)c=function(){};blobToBase64(blob,function(b64){var ni=normDesa(dn);sendToBackend('uploadDrive',{fileName:fn,desaName:ni.cleanName,fileData:b64,year:dt.getFullYear().toString(),month:dt.toLocaleDateString('id-ID',{month:'long'}),desa:ni.cleanName,mimeType:'application/zip'},function(r){c(r&&r.success===true);});});}
+function sendTelegram(blob,fn,dn,c){if(!c)c=function(){};blobToBase64(blob,function(b64){var ni=normDesa(dn);sendToBackend('sendTelegram',{fileName:fn,desaName:ni.cleanName,fileData:b64,mimeType:'application/zip'},function(r){c(r&&r.success===true);});});}
+function blobToBase64(blob,c){var r=new FileReader();r.onloadend=function(){c(r.result.split(',')[1]);};r.readAsDataURL(blob);}
+function normDesa(n){if(!n)return{original:"",normalized:"",forTelegram:"",cleanName:""};var nn=n.replace(/^Desa\s+/i,'').replace(/^Kelurahan\s+/i,'').replace(/Kel\.\s*/gi,'').replace(/Kel\s/gi,'').trim();var ft=nn.replace(/_/g,' ');return{original:n,normalized:nn,forTelegram:ft,cleanName:ft.trim()};}
 
-        <!-- ===== ABSEN ===== -->
-        <div id="absenContent" style="display: none;">
-            <div class="absen-card">
-                <div class="absen-filter-row">
-                    <div class="form-group">
-                        <label>&#128197; TAHUN</label>
-                        <select id="absenTahunSelect"><option>Memuat...</option></select>
-                    </div>
-                    <div class="form-group">
-                        <label>&#128198; BULAN</label>
-                        <select id="absenBulanSelect" disabled><option>Pilih tahun</option></select>
-                    </div>
-                </div>
-                <div class="absen-btn-download-container">
-                    <button onclick="shareAsPNGAbsen()" class="absen-btn-download" id="downloadAbsenBtn">
-                        <i class="fas fa-download"></i> DOWNLOAD ABSEN PNG
-                    </button>
-                </div>
-            </div>
-            <div id="absenResultContainer"></div>
-            <div class="absen-info-text">&#10024; Mangsatria@2026</div>
-        </div>
+// ============================================================
+// DESA
+// ============================================================
+function loadDesaList(){var s=document.getElementById('desa');s.innerHTML='<option>⏳ Memuat...</option>';xhrGet('data/desa-list.json?t='+Date.now(),function(e,d){if(e){s.innerHTML='<option value="">-- Gagal --</option>';notif('❌ Gagal desa','err');return;}s.innerHTML='<option value="">-- Pilih Desa --</option>';var list=d.desaList||[];for(var i=0;i<list.length;i++){var o=document.createElement('option');o.value=list[i];var nm=list[i].replace(/^Desa\s+/i,'').replace(/^Kelurahan\s+/i,'').trim();o.textContent=nm;o.setAttribute('data-raw',list[i]);s.appendChild(o);}notif('✅ '+list.length+' desa','suc');});}
 
-        <!-- ===== PIKET ===== -->
-        <div id="hanpanganContent">
-            <iframe src="https://sukasada05.github.io/Hanpangan/" title="PIKET"></iframe>
-        </div>
+function loadDesa(){var s=document.getElementById('desa');desa=s.value;if(!desa){document.getElementById('pDesa').textContent='Pilih desa';document.getElementById('pKoordinat').textContent='Pilih desa';document.getElementById('attBtn').disabled=true;document.getElementById('attDesa').textContent='-';return;}var ni=normDesa(desa);document.getElementById('pDesa').textContent='🏘️ '+ni.cleanName;document.getElementById('attDesa').textContent=ni.cleanName;document.getElementById('attBtn').disabled=false;document.getElementById('pKoordinat').textContent='⏳ Memuat...';xhrGet('data/coordinates/'+desa+'.json?t='+Date.now(),function(e,d){if(e){document.getElementById('pKoordinat').textContent='❌ Gagal';notif('❌ Koordinat tidak ditemukan','err');return;}if(!d.coordinates||d.coordinates.length===0){document.getElementById('pKoordinat').textContent='❌ Kosong';return;}koordList=[];for(var i=0;i<d.coordinates.length;i++){var c=d.coordinates[i];koordList.push(c.lat+','+c.lon+','+c.elevation);}pickCoord();notif('✅ '+koordList.length+' titik','suc');});checkInput();}
 
-    </div>
+function pickCoord(){if(koordList.length===0)return;var idx=Math.floor(Math.random()*koordList.length);koordNow=koordList[idx];document.getElementById('pKoordinat').textContent='📍 '+koordNow;updatePreview();checkInput();}
 
-    <div id="absenScreenshotArea" style="position: fixed; left: -9999px; top: 0; width: 500px; background: white;"></div>
+// ============================================================
+// IMAGE
+// ============================================================
+function previewImage(){var f=document.getElementById('gambar').files[0];var p=document.getElementById('pGambar');if(f){var r=new FileReader();r.onload=function(e){img=new Image();img.src=e.target.result;img.onload=function(){if(img.height>img.width){document.getElementById('gambar').value='';p.textContent='⚠️ Portrait tidak boleh!';notif('⚠️ Gunakan landscape!','warn');return;}p.textContent='📷 '+f.name+' ('+img.width+'x'+img.height+')';if(koordList.length>0)pickCoord();updatePreview();checkInput();};img.onerror=function(){notif('❌ Gagal gambar','err');};};r.readAsDataURL(f);}else{p.textContent='Belum ada foto';img=new Image();updatePreview();checkInput();}}
 
-    <!-- ====== SATU SCRIPT EKSTERNAL ====== -->
-    <script src="app.js"></script>
+// ============================================================
+// PREVIEW
+// ============================================================
+function updatePreview(){var canvas=document.getElementById('canvas');var ctx=canvas.getContext('2d');var tg=document.getElementById('tgl').value;if(tg){var dt=new Date(tg);tgl=dt.toISOString();document.getElementById('pTgl').textContent='📅 '+dt.toLocaleDateString('id-ID',{weekday:'long',day:'2-digit',month:'long',year:'numeric'})+' '+dt.toLocaleTimeString('id-ID',{hour:'2-digit',minute:'2-digit'});}else{tgl='';document.getElementById('pTgl').textContent='Pilih tanggal';}if(img.src&&img.complete){canvas.width=800;canvas.height=Math.round(canvas.width*(img.height/img.width));}else{canvas.width=800;canvas.height=Math.round(canvas.width*(9/16));}ctx.clearRect(0,0,canvas.width,canvas.height);if(img.src&&img.complete){ctx.drawImage(img,0,0,canvas.width,canvas.height);}else{ctx.fillStyle='#000';ctx.fillRect(0,0,canvas.width,canvas.height);}ctx.textAlign='right';ctx.font='36px Arial';var b=20,l=40,r=10;if(desa){var nm=desa.replace(/^Desa\s+/i,'').replace(/^Kelurahan\s+/i,'').trim();ctx.fillStyle='#fff';ctx.fillText('Babinsa '+nm,canvas.width-r,canvas.height-b-(l*2));}if(koordNow){ctx.fillStyle='#fff';ctx.fillText(koordNow,canvas.width-r,canvas.height-b-l);}if(tgl){var d2=new Date(tgl);ctx.fillStyle='#fff';ctx.fillText(d2.toLocaleDateString('id-ID',{day:'2-digit',month:'long',year:'numeric'})+', '+d2.toLocaleTimeString('id-ID',{hour:'2-digit',minute:'2-digit',second:'2-digit'}),canvas.width-r,canvas.height-b);}checkInput();}
 
+// ============================================================
+// CHECK
+// ============================================================
+function checkInput(){var n=document.getElementById('narasi').value.trim();var ok=desa&&koordNow&&tgl&&img.src&&img.complete&&n;document.getElementById('submitBtn').disabled=!ok;}
+
+// ============================================================
+// SUBMIT
+// ============================================================
+function submitLaporan(){if(!desa){notif('Pilih desa!','warn');return;}if(!koordNow){notif('Koordinat tidak valid!','warn');return;}if(!tgl){notif('Pilih tanggal!','warn');return;}if(!img.src||!img.complete){notif('Upload foto!','warn');return;}if(!document.getElementById('narasi').value.trim()){notif('Isi narasi!','warn');return;}if(isSameDate()){notif('⚠️ Sudah ada laporan di tanggal yang sama!','warn');return;}var ni=normDesa(desa);var dt=new Date(tgl);var day=String(dt.getDate()).padStart(2,'0');var mon=String(dt.getMonth()+1).padStart(2,'0');var monName=dt.toLocaleDateString('id-ID',{month:'long'});var yr=dt.getFullYear();var msg='Kirim laporan untuk '+ni.cleanName+'?\n\nFile ZIP:\n'+ni.cleanName+' '+day+' '+mon+' '+yr+'.zip\n\nIsi:\n- '+ni.cleanName+' '+day+' '+monName+' '+yr+' Dukops.png\n- '+ni.cleanName+' '+day+' '+monName+' '+yr+' Narasi.txt';if(!confirm(msg))return;var btn=document.getElementById('submitBtn');var orig=btn.innerHTML;btn.disabled=true;btn.innerHTML='⏳ Memproses...';document.getElementById('statusBar').textContent='📌 Status: Mengirim...';var canvas=document.getElementById('canvas');var imgData=canvas.toDataURL('image/png');var narasi=document.getElementById('narasi').value;var fDate=dt.toLocaleDateString('id-ID',{weekday:'long',day:'2-digit',month:'long',year:'numeric'});var narasiContent=fDate+'\tBabinsa '+ni.cleanName+' '+narasi;var zip=new JSZip();zip.file(ni.cleanName+' '+day+' '+monName+' '+yr+' Narasi.txt',narasiContent);zip.file(ni.cleanName+' '+day+' '+monName+' '+yr+' Dukops.png',imgData.split('base64,')[1],{base64:true});zip.generateAsync({type:'blob'}).then(function(content){var fn=ni.cleanName+' '+day+' '+mon+' '+yr+'.zip';var a=document.createElement('a');a.href=URL.createObjectURL(content);a.download=fn;document.body.appendChild(a);a.click();document.body.removeChild(a);sendTelegram(content,fn,desa,function(ts){uploadDrive(content,fn,desa,dt,function(ds){cnt++;document.getElementById('cnt').textContent=cnt;localStorage.setItem('dukopsCounter',cnt);updateDC(desa,fn);saveDate(tgl);if(ds&&ts)notif('✅ Laporan terkirim!','suc');else if(ds)notif('✅ Tersimpan Drive, gagal Telegram','warn');else if(ts)notif('✅ Terkirim Telegram, gagal Drive','warn');else notif('⚠️ Hanya download','warn');var dc2=getDC(desa);if(dc2>=TARGET){showThankYou(ni.cleanName,dc2);sendThankYouTelegram(ni.cleanName,dc2);}if(document.getElementById('attPanel').style.display!=='none')loadAttendance();document.getElementById('gambar').value='';document.getElementById('pGambar').textContent='Belum ada foto';document.getElementById('narasi').value='';img=new Image();updatePreview();checkInput();btn.disabled=false;btn.innerHTML=orig;document.getElementById('statusBar').textContent='📌 Status: Siap';});});}).catch(function(e){notif('❌ Gagal ZIP: '+e.message,'err');btn.disabled=false;btn.innerHTML=orig;document.getElementById('statusBar').textContent='📌 Status: Error';});}
+
+function isSameDate(){if(!tgl)return false;var d1=new Date(tgl);var d1d=d1.getDate(),d1m=d1.getMonth(),d1y=d1.getFullYear();for(var i=0;i<dates.length;i++){var d2=new Date(dates[i]);if(d2.getDate()===d1d&&d2.getMonth()===d1m&&d2.getFullYear()===d1y)return true;}return false;}
+
+// ============================================================
+// COUNTER
+// ============================================================
+function loadCounter(){var s=localStorage.getItem('dukopsCounter');if(s){cnt=parseInt(s,10);document.getElementById('cnt').textContent=cnt;}}
+function loadDates(){var s=localStorage.getItem('dukopsDates');if(s){try{dates=JSON.parse(s);}catch(e){}}
+function saveDate(d){dates.push(d);localStorage.setItem('dukopsDates',JSON.stringify(dates));}
+function loadDC(){var s=localStorage.getItem('dukopsDesaCounter');dc=s?JSON.parse(s):{};}
+function updateDC(dn,fn){var dt=new Date(tgl);var my=dt.toLocaleDateString('id-ID',{month:'long',year:'numeric'});if(!dc[dn])dc[dn]={count:0,files:[],month:my};if(dc[dn].month!==my){dc[dn]={count:1,files:[fn],month:my};}else{dc[dn].count++;dc[dn].files.push(fn);if(dc[dn].files.length>TARGET)dc[dn].files.shift();}localStorage.setItem('dukopsDesaCounter',JSON.stringify(dc));return dc[dn];}
+function getDC(dn){var dt=new Date(tgl);var my=dt.toLocaleDateString('id-ID',{month:'long',year:'numeric'});var key=dn+'|'+my;if(!dc[dn]||dc[dn].month!==my)return 0;return dc[dn].count||0;}
+
+// ============================================================
+// RESET
+// ============================================================
+function resetAll(){if(confirm('Reset semua data?')){cnt=0;document.getElementById('cnt').textContent='0';localStorage.removeItem('dukopsCounter');localStorage.removeItem('dukopsDates');localStorage.removeItem('dukopsDesaCounter');dc={};document.getElementById('desa').value='';document.getElementById('pDesa').textContent='Pilih desa';document.getElementById('pKoordinat').textContent='Pilih desa';document.getElementById('gambar').value='';document.getElementById('pGambar').textContent='Belum ada foto';document.getElementById('narasi').value='';img=new Image();desa='';koordNow='';koordList=[];resetCanvas();updatePreview();checkInput();document.getElementById('attBtn').disabled=true;document.getElementById('attDesa').textContent='-';notif('🔄 Data direset!','suc');document.getElementById('statusBar').textContent='📌 Status: Reset';}}
+function resetCanvas(){var canvas=document.getElementById('canvas');var ctx=canvas.getContext('2d');canvas.width=800;canvas.height=Math.round(canvas.width/(16/9));ctx.fillStyle='#000';ctx.fillRect(0,0,canvas.width,canvas.height);}
+
+// ============================================================
+// ATTENDANCE
+// ============================================================
+function showAttendance(){var p=document.getElementById('attPanel');if(p.style.display==='none'){p.style.display='block';document.getElementById('attBtn').textContent='📊 TUTUP';var n=new Date();var m=n.getFullYear()+'-'+String(n.getMonth()+1).padStart(2,'0');document.getElementById('attMonth').value=m;loadAttendance();}else{hideAttendance();}}
+function hideAttendance(){document.getElementById('attPanel').style.display='none';document.getElementById('attBtn').textContent='📊 LAPORAN';}
+function loadAttendance(){var load=document.getElementById('attLoad'),list=document.getElementById('attList'),sum=document.getElementById('attSum');load.style.display='block';list.innerHTML='';sum.style.display='none';var df=desa||'',mf=document.getElementById('attMonth').value||'';sendToBackend('listFiles',{desaFilter:df,monthFilter:mf,readZips:'true'},function(r){load.style.display='none';if(!r||!r.success){list.innerHTML='<div style="padding:20px;text-align:center;color:#f44336">❌ Gagal</div>';return;}sum.style.display='block';var files=r.files||[];document.getElementById('totRpt').textContent=files.length;var ds={};for(var i=0;i<files.length;i++){var d=files[i].desa||files[i].name;ds[d]=(ds[d]||0)+1;}var dcnt=Object.keys(ds).length;document.getElementById('totDesa').textContent=dcnt;var tt=dcnt*TARGET,ach=0;for(var k in ds)ach+=Math.min(ds[k],TARGET);var pct=tt>0?Math.round((ach/tt)*100):0;document.getElementById('targetStat').textContent=pct+'%';var html='';for(var dn in ds){var c=ds[dn];var st=c>=TARGET?'LENGKAP':(c>=5?'BELUM LENGKAP':'BELUM');var cls=st==='LENGKAP'?'badge-lengkap':(st==='BELUM LENGKAP'?'badge-bl':'badge-belum');html+='<div class="absenItem"><span class="nm">'+dn+'</span><span class="st">'+c+'/'+TARGET+'</span><span class="badge '+cls+'">'+st+'</span></div>';}list.innerHTML=html||'<div style="padding:20px;text-align:center;color:#666">Tidak ada data</div>';});}
+
+// ============================================================
+// THANK YOU
+// ============================================================
+function showThankYou(dn,c){var m=document.createElement('div');m.style.cssText='position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,.85);z-index:999999;display:flex;align-items:center;justify-content:center';m.innerHTML='<div style="background:#c0c0c0;border:4px solid #fff #808080 #808080 #fff;padding:25px 30px;max-width:380px;text-align:center"><div style="font-size:50px;color:#4CAF50">🏆</div><h2 style="color:#000080">SELAMAT!</h2><p style="font-size:13px"><strong>Babinsa '+dn+'</strong><br>Target '+TARGET+' laporan tercapai! ('+c+' laporan)</p><button onclick="this.parentElement.parentElement.remove()" class="btn btn-s" style="margin-top:12px;font-size:13px">OK</button></div>';document.body.appendChild(m);setTimeout(function(){if(m.parentNode)m.remove();},8000);}
+function sendThankYouTelegram(dn,c){var msg='🎉 *SELAMAT!* 🎉\n\n*Babinsa '+dn+'* telah menyelesaikan *'+c+' laporan DUKOPS* untuk bulan ini!\n\n✅ *Target '+TARGET+' laporan per bulan TERCAPAI!*\n\nTerima kasih atas dedikasi dan kerja keras dalam melaksanakan tugas DUKOPS.\n\n*KORAMIL 1609-05/SUKASADA*\n*Kodim 1609/Buleleng*';sendToBackend('sendTelegramText',{message:msg,chatId:'-1003020813628'},function(r){if(r&&r.success)console.log('✅ Thank you sent');else console.error('❌ Failed');});}
+
+// ============================================================
+// NOTIF
+// ============================================================
+function notif(msg,type){var t=document.getElementById('toast');if(!t)return;t.textContent=msg;t.className='toast show';if(type==='suc')t.className+=' suc';else if(type==='err')t.className+=' err';else if(type==='warn')t.className+=' warn';clearTimeout(t._timer);t._timer=setTimeout(function(){t.classList.remove('show');},3000);}
+
+// ============================================================
+// ABSEN TAB - GOOGLE APPS SCRIPT
+// ============================================================
+(function(){var SCRIPT='https://script.google.com/macros/s/AKfycbxcKBFM8Mm0A8e_hWfl48uEUuDhlmxK8okgXF4M-102HLEuROZPN9YZlpmKnkRo8b_SKA/exec';var tahun=document.getElementById('absenTahun'),bulan=document.getElementById('absenBulan'),res=document.getElementById('absenResult');
+window.loadAbsen=function(){if(!tahun)return;tahun.disabled=true;tahun.innerHTML='<option>⏳ Memuat...</option>';xhrGet(SCRIPT+'?action=getYears',function(e,d){if(e||!d||d.length===0){tahun.innerHTML='<option value="">❌ Gagal</option>';tahun.disabled=false;return;}tahun.innerHTML='<option value="">-- Pilih Tahun --</option>';for(var i=0;i<d.length;i++){var o=document.createElement('option');o.value=d[i];o.textContent=d[i];tahun.appendChild(o);}tahun.disabled=false;if(d.length>0){tahun.value=d[0];loadBulan();}});};
+window.loadBulan=function(){if(!tahun||!bulan)return;var t=tahun.value;if(!t){bulan.innerHTML='<option>Pilih tahun</option>';bulan.disabled=true;return;}bulan.disabled=true;bulan.innerHTML='<option>⏳ Memuat...</option>';xhrGet(SCRIPT+'?action=getMonths&tahun='+encodeURIComponent(t),function(e,d){if(e||!d||d.length===0){bulan.innerHTML='<option>❌ Gagal</option>';bulan.disabled=false;return;}bulan.innerHTML='<option value="">-- Pilih Bulan --</option>';for(var i=0;i<d.length;i++){var o=document.createElement('option');var val=d[i].num||d[i];var label=d[i].name||d[i];o.value=val;o.textContent=label;bulan.appendChild(o);}bulan.disabled=false;if(d.length>0){bulan.value=d[0].num||d[0];loadAbsenData();}});};
+window.loadAbsenData=function(){var t=tahun?tahun.value:'',b=bulan?bulan.value:'';if(!t||!b||!res)return;res.innerHTML='<div style="text-align:center;padding:15px">⏳ Memuat...</div>';xhrGet(SCRIPT+'?action=getData&tahun='+encodeURIComponent(t)+'&bulan='+encodeURIComponent(b),function(e,d){if(e||!d||d.error){res.innerHTML='<div style="color:#f44336;padding:15px">❌ '+(d?d.error:'Gagal')+'</div>';return;}displayAbsen(d);});};
+function displayAbsen(d){if(!res)return;var html='<div class="absenCard"><div class="absenGrid">';html+='<div class="absenStat"><div class="v" style="color:#1a73e8">'+d.total_desa+'</div><div class="lbl">DESA</div></div>';html+='<div class="absenStat"><div class="v" style="color:#4caf50">'+d.desa_lengkap+'</div><div class="lbl">LENGKAP</div></div>';html+='<div class="absenStat"><div class="v" style="color:#ff9800">'+d.desa_belum_lengkap+'</div><div class="lbl">BL</div></div>';html+='<div class="absenStat"><div class="v" style="color:#f44336">'+d.desa_belum+'</div><div class="lbl">BELUM</div></div></div>';var p=d.total_desa>0?Math.round((d.desa_lengkap/d.total_desa)*100):0;html+='<div style="margin:6px 0"><div style="display:flex;justify-content:space-between;font-size:11px"><span>📈 PROGRESS</span><span><strong>'+p+'%</strong></span></div><div class="pbar2"><div class="pfill2" style="width:'+p+'%;background:linear-gradient(90deg,#4CAF50,#66BB6A)"></div></div></div>';html+='<div style="font-weight:bold;font-size:11px;margin:6px 0 3px">📋 DAFTAR DESA ('+d.total_desa+')</div>';if(d.details&&d.details.length>0){for(var i=0;i<d.details.length;i++){var di=d.details[i];var cls=di.status==='LENGKAP'?'badge-lengkap':(di.status==='BELUM LENGKAP'?'badge-bl':'badge-belum');html+='<div class="absenItem"><span class="nm">'+di.nama+'</span><span class="st">'+di.jumlah_file+'/9</span><span class="badge '+cls+'">'+di.status+'</span></div>';}}else{html+='<div style="padding:8px;text-align:center;color:#666">Tidak ada data</div>';}html+='</div>';res.innerHTML=html;}
+window.downloadAbsenPNG=function(){if(!res||!res.innerHTML||res.innerHTML.indexOf('absenCard')===-1){notif('⚠️ Muat data dulu!','warn');return;}if(typeof html2canvas==='undefined'){notif('❌ html2canvas tidak ditemukan','err');return;}notif('📸 Membuat gambar...','suc');var area=document.createElement('div');area.style.cssText='position:fixed;left:-9999px;top:0;width:600px;background:#fff;padding:15px;font-family:MS Sans Serif,Segoe UI,Tahoma,sans-serif';area.innerHTML=res.innerHTML;document.body.appendChild(area);setTimeout(function(){html2canvas(area,{scale:2,backgroundColor:'#fff',useCORS:true}).then(function(canvas){var link=document.createElement('a');link.download='Absensi_DUKOPS.png';link.href=canvas.toDataURL('image/png');document.body.appendChild(link);link.click();document.body.removeChild(link);document.body.removeChild(area);notif('✅ Download berhasil!','suc');}).catch(function(){document.body.removeChild(area);notif('❌ Gagal','err');});},500);};
+setTimeout(loadAbsen,500);})();
+
+// ============================================================
+// SERVICE WORKER - ONLINE ONLY
+// ============================================================
+if('serviceWorker' in navigator){
+navigator.serviceWorker.register('/jadul/sw.js')
+.then(function(){console.log('✅ SW registered');})
+.catch(function(){console.log('❌ SW failed');});
+}
+
+console.log('🖥️ DUKOPS Win98 - Full Functional');
+</script>
 </body>
 </html>
